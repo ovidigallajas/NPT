@@ -50,7 +50,7 @@ if($this->session->userdata('perfil')=='a') {
 		<tr>
 			<th scope="col"></th>
 			<th scope="col" class='text-center'>Nombre</th>
-			<th scope="col" class='text-center'>Plataforma</th>
+			<th scope="col" class='text-center'>Tipo</th>
 			<th scope="col" class='text-center'>Descripción</th>
 			<th scope="col" class='text-center'>Edad Mínima</th>
 			<th scope="col" class='text-center'></th>
@@ -66,7 +66,7 @@ if($this->session->userdata('perfil')=='a') {
 			echo "<td class='text-center'>".$row->descripcion."</td>";
 			echo "<td class='text-center'>".$row->edadMinima."</td>";
 			if($this->session->userdata('perfil')=='a'){
-				echo '<td><a href="'.base_url().'index.php/videojuegos/editarVideojuego?id='.$row->idJuego.'&n='.$row->nombre.'&d='.$row->descripcion.'&e='.$row->edadMinima.'&p='.$row->tipo.'">Editar</a></td>';
+				echo '<td><a href="'.base_url().'index.php/videojuegos/editarVideojuego?id='.$row->idJuego.'&n='.$row->nombre.'&d='.$row->descripcion.'&e='.$row->edadMinima.'&t='.$row->tipo.'">Editar</a></td>';
 			}
 			if($this->session->userdata('perfil')=='a'){
 				echo '<td><a href="'.base_url().'index.php/videojuegos/eliminarVideojuego?id='.$row->idJuego.'&i='.$row->imagenJuego.'">Eliminar</a></td>';

@@ -36,13 +36,13 @@
 </div>
 <h1>Editar Plataforma</h1><br>
 <div id="centrar">
-	<form action="<?php echo base_url() ?>index.php/videojuegos/EditarPlataforma_post" method="post" enctype="multipart/form-data">
+	<form action="<?php echo base_url() ?>index.php/videojuegos/editarPlataforma_post" method="post" enctype="multipart/form-data">
 		<label for="nombre">Nombre</label><br>
 		<input type="text" name="nombre" value="<?php echo $nombre?>"/><br>
 		<label for="userfile">Imagen</label><br>
 		<input type="file" name="userfile"/><br><br>
 		<input type="hidden" name="id" value="<?php echo $id?>"/>
-		<input type="submit" value="Añadir">
+		<input type="submit" value="Editar">
 	</form><br>
 	<p><?php if(isset($mensaje)) echo $mensaje; ?></p>
 	<?=validation_errors();?><br>

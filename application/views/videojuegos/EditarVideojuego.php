@@ -46,8 +46,8 @@
 	<form action="<?php echo base_url() ?>index.php/videojuegos/EditarVideojuego_post" method="post" enctype="multipart/form-data">
 		<label for="nombre">Nombre</label><br>
 		<input type="text" name="nombre" value="<?php echo $nombre?>"/><br>
-		<label for="plataforma">Plataformas</label><br>
-		<input type="text" name="plataforma" value="<?php echo $plataforma?>"/><br>
+		<label for="tipo">Tipo</label><br>
+		<input type="text" name="tipo" value="<?php echo $tipo?>"/><br>
 		<label for="edad">Edad Mínima</label><br>
 		<input type="text" name="edad" value="<?php echo $edad?>"/><br>
 		<label for="descripcion">Descripción</label><br>

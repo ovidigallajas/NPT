@@ -62,4 +62,19 @@ class videojuegos_model extends CI_Model {
 	public function eliminar_videojuego($id){
 		$this->db->delete('juegos', array('idJuego' => $id));
 	}
+
+ 	public function comprobarPlataforma($nombre){
+		$this->db->select('nombre');
+		$this->db->from('plataformas');
+		$this->db->where('nombre', $nombre);
+		$consulta = $this->db->get();
+		return $consulta->num_rows();
+	}
+	public function comprobarJuego($nombre){
+		$this->db->select('nombre');
+		$this->db->from('juegos');
+		$this->db->where('nombre', $nombre);
+		$consulta = $this->db->get();
+		return $consulta->num_rows();
+	}
 }

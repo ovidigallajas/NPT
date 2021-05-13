@@ -31,25 +31,31 @@ class videojuegos extends CI_Controller {
 			$this->form_validation->set_message('required','El campo %s es obligatorio');
 			if($this->form_validation->run()!=false) {
 				$nombre = $this->input->post('nombre');
-
-				$config['upload_path'] = "recursos/imagenes/";
-				$config['file_name'] = $nombre;
-				$config['allowed_types'] = "jpg|png|jpeg";
-
-				$this->load->library('upload', $config);
-
-				if (!$this->upload->do_upload()) {
-					$datos["mensaje"] = "No se ha registrado correctamente";
+				$this->load->model('videojuegos_model');
+				if($this->videojuegos_model->comprobarPlataforma($nombre)>0){
+					$datos["mensaje"] = "El nombre de la plataforma introducida ya existe";
 					$this->load->view('videojuegos/AnadirPlataforma', $datos);
 				}else {
-					$this->load->model('videojuegos_model');
-					$datos["img"]=$this->upload->data();
 
-					if ($this->videojuegos_model->anadir_plataforma($nombre, $datos["img"]["file_name"])) {
-						Redirect("index.php/videojuegos/verPlataformas");
-					} else {
+					$config['upload_path'] = "recursos/imagenes/";
+					$config['file_name'] = $nombre;
+					$config['allowed_types'] = "jpg|png|jpeg";
+
+					$this->load->library('upload', $config);
+
+					if (!$this->upload->do_upload()) {
 						$datos["mensaje"] = "No se ha registrado correctamente";
 						$this->load->view('videojuegos/AnadirPlataforma', $datos);
+					} else {
+						$this->load->model('videojuegos_model');
+						$datos["img"] = $this->upload->data();
+
+						if ($this->videojuegos_model->anadir_plataforma($nombre, $datos["img"]["file_name"])) {
+							Redirect("index.php/videojuegos/verPlataformas");
+						} else {
+							$datos["mensaje"] = "No se ha registrado correctamente";
+							$this->load->view('videojuegos/AnadirPlataforma', $datos);
+						}
 					}
 				}
 			}else{
@@ -73,26 +79,34 @@ class videojuegos extends CI_Controller {
 		if($this->form_validation->run()!=false) {
 			$nombre = $this->input->post('nombre');
 			$id = $this->input->post('id');
-
-			$config['upload_path'] = "recursos/imagenes/";
-			$config['file_name'] = $nombre;
-			$config['allowed_types'] = "jpg|png|jpeg";
-			$config['overwrite'] = true;
-
-			$this->load->library('upload', $config);
-
-			if (!$this->upload->do_upload()) {
-				$datos["mensaje"] = "No se ha editado correctamente";
+			$this->load->model('videojuegos_model');
+			if($this->videojuegos_model->comprobarPlataforma($nombre)>0){
+				$datos["mensaje"] = "El nombre de la plataforma introducida ya existe";
+				$datos["nombre"] = $nombre;
+				$datos["id"] = $id;
 				$this->load->view('videojuegos/EditarPlataforma', $datos);
 			}else {
-				$this->load->model('videojuegos_model');
-				$datos["img"]=$this->upload->data();
 
-				if ($this->videojuegos_model->editar_plataforma($id,$nombre, $datos["img"]["file_name"])) {
-					Redirect("index.php/videojuegos/verPlataformas");
-				} else {
+				$config['upload_path'] = "recursos/imagenes/";
+				$config['file_name'] = $nombre;
+				$config['allowed_types'] = "jpg|png|jpeg";
+				$config['overwrite'] = true;
+
+				$this->load->library('upload', $config);
+
+				if (!$this->upload->do_upload()) {
 					$datos["mensaje"] = "No se ha editado correctamente";
 					$this->load->view('videojuegos/EditarPlataforma', $datos);
+				} else {
+					$this->load->model('videojuegos_model');
+					$datos["img"] = $this->upload->data();
+
+					if ($this->videojuegos_model->editar_plataforma($id, $nombre, $datos["img"]["file_name"])) {
+						Redirect("index.php/videojuegos/verPlataformas");
+					} else {
+						$datos["mensaje"] = "No se ha editado correctamente";
+						$this->load->view('videojuegos/EditarPlataforma', $datos);
+					}
 				}
 			}
 		}else{
@@ -126,34 +140,40 @@ class videojuegos extends CI_Controller {
 	public function AnadirVideojuego_post(){
 		$this->form_validation->set_rules('nombre', 'Nombre', 'required');
 		$this->form_validation->set_rules('descripcion', 'Descripción', 'required');
-		$this->form_validation->set_rules('plataforma', 'Plataforma', 'required');
+		$this->form_validation->set_rules('tipo', 'Tipo', 'required');
 		$this->form_validation->set_rules('edad', 'Edad', 'required');
 		//$this->form_validation->set_rules('imagen', 'Imagen', 'required');
 		$this->form_validation->set_message('required','El campo %s es obligatorio');
 		if($this->form_validation->run()!=false) {
 			$nombre = $this->input->post('nombre');
 			$descripcion = $this->input->post('descripcion');
-			$plataforma = $this->input->post('plataforma');
+			$tipo = $this->input->post('tipo');
 			$edad = $this->input->post('edad');
-
-			$config['upload_path'] = "recursos/imagenes/";
-			$config['file_name'] = $nombre;
-			$config['allowed_types'] = "jpg|png|jpeg";
-
-			$this->load->library('upload', $config);
-
-			if (!$this->upload->do_upload()) {
-				$datos["mensaje"] = "No se ha registrado correctamente";
+			$this->load->model('videojuegos_model');
+			if($this->videojuegos_model->comprobarJuego($nombre)>0){
+				$datos["mensaje"] = "El nombre del videojuego introducido ya existe";
 				$this->load->view('videojuegos/AnadirVideojuego', $datos);
 			}else {
-				$this->load->model('videojuegos_model');
-				$datos["img"]=$this->upload->data();
 
-				if ($this->videojuegos_model->anadir_videojuego($nombre,$descripcion,$plataforma,$edad,$datos["img"]["file_name"])) {
-					Redirect("index.php/videojuegos/verVideojuegos");
-				} else {
+				$config['upload_path'] = "recursos/imagenes/";
+				$config['file_name'] = $nombre;
+				$config['allowed_types'] = "jpg|png|jpeg";
+
+				$this->load->library('upload', $config);
+
+				if (!$this->upload->do_upload()) {
 					$datos["mensaje"] = "No se ha registrado correctamente";
 					$this->load->view('videojuegos/AnadirVideojuego', $datos);
+				} else {
+					$this->load->model('videojuegos_model');
+					$datos["img"] = $this->upload->data();
+
+					if ($this->videojuegos_model->anadir_videojuego($nombre, $descripcion, $tipo, $edad, $datos["img"]["file_name"])) {
+						Redirect("index.php/videojuegos/verVideojuegos");
+					} else {
+						$datos["mensaje"] = "No se ha registrado correctamente";
+						$this->load->view('videojuegos/AnadirVideojuego', $datos);
+					}
 				}
 			}
 		}else{
@@ -168,7 +188,7 @@ class videojuegos extends CI_Controller {
 			'nombre' => $this->input->get('n'),
 			'edad' => $this->input->get('e'),
 			'descripcion' => $this->input->get('d'),
-			'plataforma' => $this->input->get('p')
+			'tipo' => $this->input->get('t')
 		);
 		$this->load->view('videojuegos/EditarVideojuego', $data);
 	}
@@ -176,36 +196,44 @@ class videojuegos extends CI_Controller {
 	public function editarVideojuego_post(){
 		$this->form_validation->set_rules('nombre', 'Nombre', 'required');
 		$this->form_validation->set_rules('descripcion', 'Descripción', 'required');
-		$this->form_validation->set_rules('plataforma', 'Plataforma', 'required');
+		$this->form_validation->set_rules('tipo', 'Tipo', 'required');
 		$this->form_validation->set_rules('edad', 'Edad', 'required');
 		//$this->form_validation->set_rules('imagen', 'Imagen', 'required');
 		$this->form_validation->set_message('required','El campo %s es obligatorio');
 		if($this->form_validation->run()!=false) {
 			$id = $this->input->post('id');
 			$nombre = $this->input->post('nombre');
-			$descripcion = $this->input->post('descripcion');
-			$plataforma = $this->input->post('plataforma');
-			$edad = $this->input->post('edad');
-
-			$config['upload_path'] = "recursos/imagenes/";
-			$config['file_name'] = $nombre;
-			$config['allowed_types'] = "jpg|png|jpeg";
-			$config['overwrite'] = true;
-
-			$this->load->library('upload', $config);
-
-			if (!$this->upload->do_upload()) {
-				$datos["mensaje"] = "No se ha editado correctamente";
-				$this->load->view('videojuegos/EditarVideojuegos', $datos);
+			$this->load->model('videojuegos_model');
+			if($this->videojuegos_model->comprobarJuego($nombre)>0){
+				$datos["mensaje"] = "El nombre del videojuego introducido ya existe";
+				$datos["nombre"] = $nombre;
+				$datos["id"] = $id;
+				$this->load->view('videojuegos/EditarVideojuego', $datos);
 			}else {
-				$this->load->model('videojuegos_model');
-				$datos["img"]=$this->upload->data();
+				$descripcion = $this->input->post('descripcion');
+				$tipo = $this->input->post('tipo');
+				$edad = $this->input->post('edad');
 
-				if ($this->videojuegos_model->editar_videojuego($id,$nombre,$descripcion,$plataforma,$edad, $datos["img"]["file_name"])) {
-					Redirect("index.php/videojuegos/verVideojuego");
-				} else {
+				$config['upload_path'] = "recursos/imagenes/";
+				$config['file_name'] = $nombre;
+				$config['allowed_types'] = "jpg|png|jpeg";
+				$config['overwrite'] = true;
+
+				$this->load->library('upload', $config);
+
+				if (!$this->upload->do_upload()) {
 					$datos["mensaje"] = "No se ha editado correctamente";
-					$this->load->view('videojuegos/EditarVideojuego', $datos);
+					$this->load->view('videojuegos/EditarVideojuegos', $datos);
+				} else {
+					$this->load->model('videojuegos_model');
+					$datos["img"] = $this->upload->data();
+
+					if ($this->videojuegos_model->editar_videojuego($id, $nombre, $descripcion, $tipo, $edad, $datos["img"]["file_name"])) {
+						Redirect("index.php/videojuegos/verVideojuego");
+					} else {
+						$datos["mensaje"] = "No se ha editado correctamente";
+						$this->load->view('videojuegos/EditarVideojuego', $datos);
+					}
 				}
 			}
 		}else{
