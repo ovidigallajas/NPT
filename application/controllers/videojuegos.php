@@ -3,11 +3,11 @@ if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
 
 /**
- * Class usuarios
+ * Class videojuegos
  */
 class videojuegos extends CI_Controller {
 	/**
-	 * usuarios constructor.
+	 * videojuegos constructor.
 	 */
 	public function __construct() {
 		parent::__construct();

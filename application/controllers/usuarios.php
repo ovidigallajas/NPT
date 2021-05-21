@@ -14,7 +14,7 @@ class usuarios extends CI_Controller {
 	}
 
 	/**
-	 * Aquí cargo el formulario de inicio de sesión
+	 * Carga el formulario de inicio de sesión
 	 */
 	public function iniciar_sesion() {
 		$data = array();
@@ -22,7 +22,7 @@ class usuarios extends CI_Controller {
 	}
 
 	/**
-	 *
+	 * Recoje los datos del formulario de inicio de sesión
 	 */
 	public function iniciar_sesion_post() {
 		if ($this->input->post()) {
@@ -57,7 +57,7 @@ class usuarios extends CI_Controller {
 	}
 
 	/**
-	 *
+	 * Crea las variables de sesión y manda a la página de inicio con el usuario ya logueado
 	 */
 	public function logueado() {
 		if($this->session->userdata('logueado')){
@@ -72,7 +72,7 @@ class usuarios extends CI_Controller {
 	}
 
 	/**
-	 *
+	 * Saca los datos de la cuenta logueada
 	 */
 	public function verCuentas(){
 		if($this->session->userdata('logueado')){
@@ -87,7 +87,7 @@ class usuarios extends CI_Controller {
 	}
 
 	/**
-	 *
+	 * Recoje los datos del formulario de modificación de la cuenta para modificarlos en la base de datos
 	 */
 	public function modificarCuentas(){
 		if ($this->input->post()) {
@@ -116,7 +116,7 @@ class usuarios extends CI_Controller {
 	}
 
 	/**
-	 *
+	 * Redirige al registro de usuarios
 	 */
 	public function registro() {
 		$data = array();
@@ -124,7 +124,7 @@ class usuarios extends CI_Controller {
 	}
 
 	/**
-	 *
+	 * Recoje los datos del formulario de registro y se añade a la base de datos
 	 */
 	public function registroUsuarios(){
 		if($this->input->post('password')==$this->input->post('password2')){
@@ -164,7 +164,7 @@ class usuarios extends CI_Controller {
 	}
 
 	/**
-	 *
+	 * Sacar el listado de todos los usuarios registrados en la aplicación
 	 */
 	public function verUsuarios(){
 		if($this->session->userdata('logueado')){
@@ -178,7 +178,7 @@ class usuarios extends CI_Controller {
 	}
 
 	/**
-	 *
+	 * Eliminar un usuarios
 	 */
 	public function  eliminarUsuarios(){
 		$id = $this->input->get('id');
@@ -188,7 +188,7 @@ class usuarios extends CI_Controller {
 	}
 
 	/**
-	 *
+	 * Eliminar usuario
 	 */
 	public function  eliminarUsuario(){
 		if($this->session->userdata('logueado')){
@@ -202,7 +202,7 @@ class usuarios extends CI_Controller {
 	}
 
 	/**
-	 *
+	 * Redirige a la página de recuperar contraseña
 	 */
 	public function recuperarContrasena(){
 		$data = array();
@@ -210,7 +210,7 @@ class usuarios extends CI_Controller {
 	}
 
 	/**
-	 *
+	 * Recoje los datos del formulario de recuperar contraseña y envía el correo con la contraseña al usuario
 	 */
 	public function recuperarContrasena_post(){
 		if ($this->input->post()) {
@@ -246,7 +246,7 @@ class usuarios extends CI_Controller {
 	}
 
 	/**
-	 *
+	 * Cierra sesión y elimina las variables de sesión
 	 */
 	public function cerrar_sesion() {
 		/*$usuario_data = array(
