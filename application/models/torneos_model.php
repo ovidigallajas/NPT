@@ -1,15 +1,31 @@
 <?php
-class videojuegos_model extends CI_Model {
+class torneos_model extends CI_Model {
 	public function __construct() {
 		parent::__construct();
 	}
 
-	public function ver_plataforma(){
-		$query = $this->db->get('torneos');
+	public function ver_torneos(){
+		$this->db->select('t.*,jt.*,j.nombre as nombreJuego,j.imagenJuego,p.nombre as nombrePlataforma');
+		$this->db->from('torneos t');
+		$this->db->join('juegotorneo jt', 't.idTorneo = jt.idTorneo');
+		$this->db->join('juegos j', 'jt.idJuego = j.idJuego');
+		$this->db->join('plataformas p', 'jt.idPlataforma = p.idPlataforma');
+		$query = $this->db->get();
 		return $query;
 	}
 
-	public function anadir_plataforma($nombre,$precioIns,$premio,$maxJugadores,$maxJugadoresPorEquipo,$fechaInicio,$fechaFin,$rondas,$organizador)
+	public function ver_mis_torneos($id){
+		$this->db->select('t.*,jt.*,j.nombre as nombreJuego,j.imagenJuego,p.nombre as nombrePlataforma');
+		$this->db->from('torneos t');
+		$this->db->join('juegotorneo jt', 't.idTorneo = jt.idTorneo');
+		$this->db->join('juegos j', 'jt.idJuego = j.idJuego');
+		$this->db->join('plataformas p', 'jt.idPlataforma = p.idPlataforma');
+		$this->db->where('idOrganizador',$id);
+		$query = $this->db->get();
+		return $query;
+	}
+
+	public function anadir_torneo($nombre,$precioIns,$premio,$maxJugadores,$maxJugadoresPorEquipo,$fechaInicio,$fechaFin,$rondas,$organizador)
 	{
 		$data = array(
 			'nombre' => $nombre,
@@ -25,7 +41,7 @@ class videojuegos_model extends CI_Model {
 		return $this->db->insert('torneos', $data);
 	}
 
-	public function editar_plataforma($id,$nombre,$precioIns,$premio,$maxJugadores,$maxJugadoresPorEquipo,$fechaInicio,$fechaFin,$rondas,$organizador)
+	public function editar_torneo($id,$nombre,$precioIns,$premio,$maxJugadores,$maxJugadoresPorEquipo,$fechaInicio,$fechaFin,$rondas,$organizador)
 	{
 		$this->db->where('idTorneo', $id);
 		$this->db->set('nombre', $nombre);
@@ -40,11 +56,11 @@ class videojuegos_model extends CI_Model {
 		return $this->db->update('torneos');
 	}
 
-	public function eliminar_plataforma($id){
+	public function eliminar_torneo($id){
 		$this->db->delete('torneos', array('idTorneo' => $id));
 	}
 
-	public function comprobarPlataforma($nombre){
+	public function comprobartorneo($nombre){
 		$this->db->select('nombre');
 		$this->db->from('torneos');
 		$this->db->where('nombre', $nombre);

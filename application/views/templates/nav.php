@@ -32,8 +32,13 @@
 					<a class="nav-link" href="<?= base_url() ?>index.php/videojuegos/verPlataformas">Plataformas</a>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link" href="#">Torneos</a>
+					<a class="nav-link" href="<?= base_url() ?>index.php/torneos/verTorneos">Torneos</a>
 				</li>
+				<?php if($this->session->userdata('organizador')==true){
+					echo '<li class="nav-item">';
+					echo "<a class='nav-link' href='".base_url()."index.php/torneos/OrganizarTorneos'>Organizador</a>";
+					echo '</li>';
+				}?>
 				<?php if($this->session->userdata('perfil')=='a'){
 					echo '<li class="nav-item">';
 					echo "<a class='nav-link' href='".base_url()."index.php/usuarios/verUsuarios'>Usuarios</a>";

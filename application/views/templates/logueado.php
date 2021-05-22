@@ -32,8 +32,13 @@
 					<a class="nav-link" href="<?= base_url() ?>index.php/videojuegos/verPlataformas">Plataformas</a>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link" href="#">Torneos</a>
+					<a class="nav-link" href="<?= base_url() ?>index.php/torneos/verTorneos">Torneos</a>
 				</li>
+				<?php if($organizador==true){
+					echo '<li class="nav-item">';
+					echo "<a class='nav-link' href='".base_url()."index.php/torneos/OrganizarTorneos'>Organizador</a>";
+					echo '</li>';
+				}?>
 				<?php if($perfil=='a'){
 					echo '<li class="nav-item">';
 					echo "<a class='nav-link' href='".base_url()."index.php/usuarios/verUsuarios'>Usuarios</a>";
@@ -82,10 +87,10 @@
 				<img src="<?= base_url() ?>recursos/imagenes/csgo.png" alt="csgo" style="width:30%;">
 			</div>
 			<!--<div class="item">
-			  <img src="imagenes/fifa21.jpg" alt="fifa" style="width:30%;">
+			  <img src="<?= base_url() ?>recursos/imagenes/fifa21.jpg" alt="fifa" style="width:30%;">
 			</div>
 			<div class="item">
-			  <img src="imagenes/logo valorant.png" alt="valorant" style="width:30%;">
+			  <img src="<?= base_url() ?>recursos/imagenes/logo valorant.png" alt="valorant" style="width:30%;">
 			</div>-->
 		</div>
 		<a class="left carousel-control" href="#myCarousel" data-slide="prev">

@@ -19,8 +19,15 @@ class torneos extends CI_Controller
 	{
 		$this->load->model('torneos_model');
 		$data = array();
-		$data['torneo'] = $this->videojuegos_model->ver_torneos();
+		$data['torneos'] = $this->torneos_model->ver_torneos();
 		$this->load->view('torneos/verTorneos', $data);
+	}
+
+	public function OrganizarTorneos(){
+		$this->load->model('torneos_model');
+		$data = array();
+		$data['torneos'] = $this->torneos_model->ver_mis_torneos($this->session->userdata('id'));
+		$this->load->view('torneos/Organizador', $data);
 	}
 
 	public function AnadirTorneo()
@@ -37,7 +44,7 @@ class torneos extends CI_Controller
 		if ($this->form_validation->run() != false) {
 			$nombre = $this->input->post('nombre');
 			$this->load->model('torneos_model');
-			if ($this->videojuegos_model->comprobarTorneo($nombre) > 0) {
+			if ($this->torneos_model->comprobarTorneo($nombre) > 0) {
 				$datos["mensaje"] = "El nombre del torneo introducida ya existe";
 				$this->load->view('torneos/AnadirTorneo', $datos);
 			} else {
@@ -55,7 +62,7 @@ class torneos extends CI_Controller
 					$this->load->model('torneos_model');
 					$datos["img"] = $this->upload->data();
 
-					if ($this->videojuegos_model->anadir_torneo($nombre, $datos["img"]["file_name"])) {
+					if ($this->torneos_model->anadir_torneo($nombre, $datos["img"]["file_name"])) {
 						Redirect("index.php/torneos/verTorneos");
 					} else {
 						$datos["mensaje"] = "No se ha registrado correctamente";
@@ -87,7 +94,7 @@ class torneos extends CI_Controller
 			$nombre = $this->input->post('nombre');
 			$id = $this->input->post('id');
 			$this->load->model('torneos_model');
-			if ($this->videojuegos_model->comprobarTorneo($nombre) > 0) {
+			if ($this->torneos_model->comprobarTorneo($nombre) > 0) {
 				$datos["mensaje"] = "El nombre de la plataforma introducida ya existe";
 				$datos["nombre"] = $nombre;
 				$datos["id"] = $id;
@@ -108,7 +115,7 @@ class torneos extends CI_Controller
 					$this->load->model('torneos_model');
 					$datos["img"] = $this->upload->data();
 
-					if ($this->videojuegos_model->editar_torneo($id, $nombre, $datos["img"]["file_name"])) {
+					if ($this->torneos_model->editar_torneo($id, $nombre, $datos["img"]["file_name"])) {
 						Redirect("index.php/torneos/verTorneos");
 					} else {
 						$datos["mensaje"] = "No se ha editado correctamente";
@@ -127,7 +134,7 @@ class torneos extends CI_Controller
 		$id = $this->input->get('id');
 		$imagen = $this->input->get('i');
 		$this->load->model('torneos_model');
-		$this->videojuegos_model->eliminar_torneo($id);
+		$this->torneos_model->eliminar_torneo($id);
 		$path_to_file = 'recursos/imagenes/' . $imagen . '';
 		unlink($path_to_file);
 		Redirect('index.php/torneos/verTorneos');

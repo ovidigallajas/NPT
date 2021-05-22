@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title> Torneos </title>
+	<title> Organizador </title>
 	<style>
 		table{
 			margin:0 auto;
@@ -37,7 +37,12 @@
 		</div>
 	</div>
 </div>
-<h1>Torneos</h1><br>
+<h1>Mis Torneos</h1><br>
+<?php
+if($this->session->userdata('perfil')=='a') {
+	echo '<p ><a href = "'.base_url().'index.php/torneos/AnadirTorneo" > Añadir</a ></p >';
+}
+?>
 <div class="container-fluid">
 	<div class="table-responsive">
 		<table class="table">
@@ -52,6 +57,7 @@
 				<th scope="col" class='text-center'>Máximo de Jugadores</th>
 				<th scope="col" class='text-center'>Precio Inscripción</th>
 				<th scope="col" class='text-center'>Premio</th>
+				<th scope="col" colspan="2" class='text-center'></th>
 			</tr>
 			</thead>
 			<tbody>
@@ -66,6 +72,8 @@
 				echo "<td class='text-center'>".$row->maxJugadores."</td>";
 				echo "<td class='text-center'>".$row->precioInscripcion."€</td>";
 				echo "<td class='text-center'>".$row->premio."€</td>";
+				echo '<td><a href="'.base_url().'index.php/torneos/editarTorneo?id='.$row->idTorneo.'&n='.$row->nombre.'"><i class="fas fa-edit"></i></a></td>';
+				echo '<td><a href="'.base_url().'index.php/torneos/eliminarTorneo?id='.$row->idTorneo.'"><i class="fas fa-trash"></i></a></td>';
 				echo '</tr>';
 			}?>
 			</tbody>

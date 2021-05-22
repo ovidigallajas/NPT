@@ -4,8 +4,9 @@ class usuario_model extends CI_Model {
 		parent::__construct();
 	}
 	public function usuario_por_nick_password($nick, $password){
-		$this->db->select('idUsuario, nick, password, perfil');
+		$this->db->select('idUsuario, nick, password, perfil, organizador');
 		$this->db->from('usuarios');
+		$this->db->join('jugadores','usuarios.idUsuario = jugadores.idUsuarioJugador');
 		$this->db->where('nick', $nick);
 		$this->db->where('password', $password);
 		$consulta = $this->db->get();
@@ -43,7 +44,13 @@ class usuario_model extends CI_Model {
 			'perfil' => 'j',
 			'diaRegistro' => date("Y-m-d H:i:s"),
 		);
-		return $this->db->insert('usuarios', $data);
+		$this->db->insert('usuarios', $data);
+		$id = $this->db->insert_id();
+		$data2 = array(
+			'idUsuarioJugador' => $id,
+			'organizador'   => false,
+		);
+		return $this->db->insert('jugadores',$data2);
 	}
 	public function eliminar_usuario($id){
 		$this->db->delete('usuarios', array('idUsuario' => $id));

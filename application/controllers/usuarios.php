@@ -40,6 +40,7 @@ class usuarios extends CI_Controller {
 						'id' => $usuario->idUsuario,
 						'nick' => $usuario->nick,
 						'perfil' => $usuario->perfil,
+						'organizador' => $usuario->organizador,
 						'logueado' => TRUE
 					);
 					$this->session->set_userdata($usuario_data);
@@ -64,6 +65,7 @@ class usuarios extends CI_Controller {
 			$data = array(
 				'nick' =>  $this->session->userdata('nick'),
 				'perfil' => $this->session->userdata('perfil'),
+				'organizador' => $this->session->userdata('organizador'),
 			);
 			$this->load->view('usuarios/logueado', $data);
 		}else{
