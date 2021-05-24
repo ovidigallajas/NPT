@@ -145,12 +145,22 @@ class usuarios extends CI_Controller {
 				$password = $this->input->post('password');
 				$edad = $this->input->post('edad');
 				$this->load->model('usuario_model');
-				if($this->usuario_model->registrar_usuario($nick, $nombre, $correo, $password, $edad)){
-					$datos['mensaje']="Registro completado correctamente";
-					$this->load->view('usuarios/iniciar_sesion',$datos);
-				}else{
-					$datos["mensaje"]="No se ha registrado correctamente";
+				if($this->usuario_model->comprobarUsuario($nick)>0){
+					$datos["mensaje"] = "El nombre de usuario introducido ya existe";
 					$this->load->view('usuarios/registro',$datos);
+				}else{
+					if($this->usuario_model->comprobarCorreo($correo)>0) {
+						$datos["mensaje"] = "El correo introducido ya existe";
+						$this->load->view('usuarios/registro',$datos);
+					}else{
+						if ($this->usuario_model->registrar_usuario($nick, $nombre, $correo, $password, $edad)) {
+							$datos['mensaje'] = "Registro completado correctamente";
+							$this->load->view('usuarios/iniciar_sesion', $datos);
+						} else {
+							$datos["mensaje"] = "No se ha registrado correctamente";
+							$this->load->view('usuarios/registro', $datos);
+						}
+					}
 				}
 			}
 			else{

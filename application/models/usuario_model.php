@@ -63,4 +63,18 @@ class usuario_model extends CI_Model {
 		$resultado = $consulta->row();
 		return $resultado;
 	}
+	public function comprobarUsuario($usuario){
+		$this->db->select('nick');
+		$this->db->from('usuarios');
+		$this->db->where('nick', $usuario);
+		$consulta = $this->db->get();
+		return $consulta->num_rows();
+	}
+	public function comprobarCorreo($correo){
+		$this->db->select('correo');
+		$this->db->from('usuarios');
+		$this->db->where('correo', $correo);
+		$consulta = $this->db->get();
+		return $consulta->num_rows();
+	}
 }

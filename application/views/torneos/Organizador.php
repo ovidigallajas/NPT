@@ -39,9 +39,8 @@
 </div>
 <h1>Mis Torneos</h1><br>
 <?php
-if($this->session->userdata('perfil')=='a') {
-	echo '<p ><a href = "'.base_url().'index.php/torneos/AnadirTorneo" > Añadir</a ></p >';
-}
+	echo '<p ><a href = "'.base_url().'index.php/torneos/AnadirTorneo" >Nuevo Torneo</a ></p >';
+
 ?>
 <div class="container-fluid">
 	<div class="table-responsive">

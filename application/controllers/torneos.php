@@ -32,7 +32,10 @@ class torneos extends CI_Controller
 
 	public function AnadirTorneo()
 	{
+		$this->load->model('videojuegos_model');
 		$data = array();
+		$data['juegos'] = $this->videojuegos_model->ver_videojuegos();
+		$data['plataforma'] = $this->videojuegos_model->ver_plataforma();
 		$this->load->view('torneos/AnadirTorneo', $data);
 	}
 

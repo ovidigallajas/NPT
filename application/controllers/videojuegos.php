@@ -203,11 +203,19 @@ class videojuegos extends CI_Controller {
 		if($this->form_validation->run()!=false) {
 			$id = $this->input->post('id');
 			$nombre = $this->input->post('nombre');
+			$tipo = $this->input->post('tipo');
+			$edad = $this->input->post('edad');
+			$descripcion = $this->input->post('descripcion');
 			$this->load->model('videojuegos_model');
 			if($this->videojuegos_model->comprobarJuego($nombre)>0){
-				$datos["mensaje"] = "El nombre del videojuego introducido ya existe";
-				$datos["nombre"] = $nombre;
-				$datos["id"] = $id;
+				$datos = array(
+					'mensaje'=> 'El nombre del videojuego introducido ya existe',
+					'nombre' => $nombre,
+					'id'=>$id,
+					'tipo'=>$tipo,
+					'edad'=>$edad,
+					'descripcion'=>$descripcion
+				);
 				$this->load->view('videojuegos/EditarVideojuego', $datos);
 			}else {
 				$descripcion = $this->input->post('descripcion');
