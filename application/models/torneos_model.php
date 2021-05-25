@@ -15,7 +15,7 @@ class torneos_model extends CI_Model {
 	}
 
 	public function ver_mis_torneos($id){
-		$this->db->select('t.*,jt.*,j.nombre as nombreJuego,j.imagenJuego,p.nombre as nombrePlataforma');
+		$this->db->select('t.*,jt.*,j.nombre as nombreJuego,j.imagenJuego,p.nombre as nombrePlataforma,DATE_FORMAT(t.fechaInicio, "%d/%m/%Y") as fechaInicio,DATE_FORMAT(t.fechaFin, "%d/%m/%Y") as fechaFin');
 		$this->db->from('torneos t');
 		$this->db->join('juegotorneo jt', 't.idTorneo = jt.idTorneo');
 		$this->db->join('juegos j', 'jt.idJuego = j.idJuego');
@@ -25,7 +25,7 @@ class torneos_model extends CI_Model {
 		return $query;
 	}
 
-	public function anadir_torneo($nombre,$precioIns,$premio,$maxJugadores,$maxJugadoresPorEquipo,$fechaInicio,$fechaFin,$rondas,$organizador)
+	public function anadir_torneo($nombre,$precioIns,$premio,$maxJugadores,$maxJugadoresPorEquipo,$fechaInicio,$fechaFin,$rondas,$organizador,$juego,$plataforma)
 	{
 		$data = array(
 			'nombre' => $nombre,
@@ -38,7 +38,14 @@ class torneos_model extends CI_Model {
 			'numRondas' => $rondas,
 			'idOrganizador' => $organizador,
 		);
-		return $this->db->insert('torneos', $data);
+		$this->db->insert('torneos', $data);
+		$id = $this->db->insert_id();
+		$data2 = array(
+			'idTorneo' => $id,
+			'idJuego'   => $juego,
+			'idPlataforma' => $plataforma
+		);
+		return $this->db->insert('juegotorneo',$data2);
 	}
 
 	public function editar_torneo($id,$nombre,$precioIns,$premio,$maxJugadores,$maxJugadoresPorEquipo,$fechaInicio,$fechaFin,$rondas,$organizador)
@@ -57,10 +64,11 @@ class torneos_model extends CI_Model {
 	}
 
 	public function eliminar_torneo($id){
+		$this->db->delete('juegotorneo', array('idTorneo' => $id));
 		$this->db->delete('torneos', array('idTorneo' => $id));
 	}
 
-	public function comprobartorneo($nombre){
+	public function comprobarTorneo($nombre){
 		$this->db->select('nombre');
 		$this->db->from('torneos');
 		$this->db->where('nombre', $nombre);

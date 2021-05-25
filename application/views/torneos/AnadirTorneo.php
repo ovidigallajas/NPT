@@ -3,10 +3,6 @@
 <head>
 	<meta charset="utf-8" />
 	<title> Nuevo Torneo </title>
-	<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-	<link rel="stylesheet" href="/resources/demos/style.css">
-	<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 	<style>
 		span{
 			color:red;
@@ -31,7 +27,7 @@
 </div>
 <h1>Torneo</h1>
 <div id="formulario">
-	<form method="post" action="<?php echo base_url() ?>index.php/torneos/crearTorneo">
+	<form action="<?php echo base_url() ?>index.php/torneos/AnadirTorneo_post" method="post" enctype="multipart/form-data">
 		<div class="form-group">
 			<label> Nombre <span>*</span></label>
 			<br />
@@ -75,6 +71,7 @@
 			<br />
 			<input type="number" class="form-control" name="premio" />
 		</div>
+		<label> Tipo de Torneo: <span>*</span></label>
 		<div class="form-check">
 			<input type="radio" class="form-check-input" name="tipoJugadores" value="Individual"/>
 			<label class="form-check-label" for="individual">Individual</label>
@@ -82,7 +79,7 @@
 		<div class="form-check">
 			<input type="radio" class="form-check-input" name="tipoJugadores" value="Equipos"/>
 			<label class="form-check-label" for="equipos">Equipos</label>
-		</div>
+		</div><br>
 		<div class="form-group" id="Jugadores" style="display:none">
 			<label> Número de jugadores <span>*</span></label>
 			<br />
@@ -98,7 +95,6 @@
 			<br />
 			<input type="text" class="form-control" name="rondas">
 		</div>
-		<br/>
 		<p><?php if(isset($mensaje)) echo $mensaje; ?></p>
 		<?=validation_errors();?>
 		<input type="submit" value="Crear" class="btn btn-outline-primary"/>
@@ -115,7 +111,6 @@
 	$(document).ready(function()
 	{
 		$("input[name=tipoJugadores]").click(function () {
-			//alert("La edad seleccionada es: " + $('input:radio[name=edad]:checked').val());
 			var tipo = $(this).val();
 			if(tipo=="Individual") {
 				$("#Jugadores").show();

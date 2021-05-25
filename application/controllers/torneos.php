@@ -23,17 +23,19 @@ class torneos extends CI_Controller
 		$this->load->view('torneos/verTorneos', $data);
 	}
 
-	public function OrganizarTorneos(){
+	public function OrganizarTorneos($mensaje = ""){
 		$this->load->model('torneos_model');
 		$data = array();
 		$data['torneos'] = $this->torneos_model->ver_mis_torneos($this->session->userdata('id'));
+		$data['mensaje'] = $mensaje;
 		$this->load->view('torneos/Organizador', $data);
 	}
 
-	public function AnadirTorneo()
+	public function AnadirTorneo($mensaje = "")
 	{
 		$this->load->model('videojuegos_model');
 		$data = array();
+		$data['mensaje'] = $mensaje;
 		$data['juegos'] = $this->videojuegos_model->ver_videojuegos();
 		$data['plataforma'] = $this->videojuegos_model->ver_plataforma();
 		$this->load->view('torneos/AnadirTorneo', $data);
@@ -41,41 +43,55 @@ class torneos extends CI_Controller
 
 	public function AnadirTorneo_post()
 	{
-		$this->form_validation->set_rules('nombre', 'Nombre', 'required');
-		//$this->form_validation->set_rules('imagen', 'Imagen', 'required');
+		$this->form_validation->set_rules('nombreTorneo', 'Nombre del Torneo', 'required');
+		$this->form_validation->set_rules('juego', 'Juego', 'required');
+		$this->form_validation->set_rules('plataforma', 'Plataforma', 'required');
+		$this->form_validation->set_rules('fechaInicio', 'Fecha Inicio', 'required');
+		$this->form_validation->set_rules('fechaFin', 'Fecha Fin', 'required');
+		$this->form_validation->set_rules('pinscripcion', 'Precio de Inscripción', 'required');
+		$this->form_validation->set_rules('premio', 'Premio', 'required');
+		$this->form_validation->set_rules('tipoJugadores', 'Tipo de Torneo', 'required');
+		$this->form_validation->set_rules('rondas', 'Rondas', 'required');
 		$this->form_validation->set_message('required', 'El campo %s es obligatorio');
 		if ($this->form_validation->run() != false) {
-			$nombre = $this->input->post('nombre');
+			$nombre = $this->input->post('nombreTorneo');
+			$juego = $this->input->post('juego');
+			$plataforma = $this->input->post('plataforma');
+			$fechaInicio = str_replace("%/%","-",$this->input->post('fechaInicio'));
+			$fechaFin = str_replace("%/%","-",$this->input->post('fechaFin'));
+			$pinscripcion = $this->input->post('pinscripcion');
+			$premio = $this->input->post('premio');
+			$numJugadores = $this->input->post('numJugadores');
+			$numJugadoresEquipo = $this->input->post('numJugadoresEquipo');
+			$rondas = $this->input->post('rondas');
+			if($numJugadores==""){
+				$numJugadores=null;
+			}
+			if($numJugadoresEquipo==""){
+				$numJugadoresEquipo=null;
+			}
+			$fechaInicio = DateTime::createFromFormat('d/m/Y', $fechaInicio);
+			$fechaFin = DateTime::createFromFormat('d/m/Y', $fechaFin);
+			$fechaInicio = $fechaInicio->format('Y-m-d');
+			$fechaFin= $fechaFin->format('Y-m-d');
 			$this->load->model('torneos_model');
 			if ($this->torneos_model->comprobarTorneo($nombre) > 0) {
 				$datos["mensaje"] = "El nombre del torneo introducida ya existe";
 				$this->load->view('torneos/AnadirTorneo', $datos);
 			} else {
-
-				$config['upload_path'] = "recursos/imagenes/";
-				$config['file_name'] = $nombre;
-				$config['allowed_types'] = "jpg|png|jpeg";
-
-				$this->load->library('upload', $config);
-
-				if (!$this->upload->do_upload()) {
-					$datos["mensaje"] = "No se ha registrado correctamente";
-					$this->load->view('torneos/AnadirTorneo', $datos);
+				if ($this->torneos_model->anadir_torneo($nombre, $pinscripcion, $premio, $numJugadores, $numJugadoresEquipo, $fechaInicio, $fechaFin, $rondas, $this->session->userdata('id'),$juego,$plataforma)) {
+					$datos['mensaje'] = "Torneo creado correctamente";
+					//$this->load->view('torneos/Organizador', $datos);
+					$this->OrganizarTorneos($datos['mensaje']);
 				} else {
-					$this->load->model('torneos_model');
-					$datos["img"] = $this->upload->data();
-
-					if ($this->torneos_model->anadir_torneo($nombre, $datos["img"]["file_name"])) {
-						Redirect("index.php/torneos/verTorneos");
-					} else {
-						$datos["mensaje"] = "No se ha registrado correctamente";
-						$this->load->view('torneos/AnadirTorneo', $datos);
-					}
+					$datos["mensaje"] = "No se ha creado correctamente";
+					$this->load->view('torneos/AnadirTorneo', $datos);
 				}
 			}
 		} else {
 			$datos['mensaje'] = "";
-			$this->load->view('torneos/AnadirTorneo', $datos);
+			//$this->load->view('torneos/AnadirTorneo', $datos);
+			$this->AnadirTorneo($datos['mensaje']);
 		}
 	}
 
@@ -135,12 +151,9 @@ class torneos extends CI_Controller
 	public function eliminarTorneo()
 	{
 		$id = $this->input->get('id');
-		$imagen = $this->input->get('i');
 		$this->load->model('torneos_model');
 		$this->torneos_model->eliminar_torneo($id);
-		$path_to_file = 'recursos/imagenes/' . $imagen . '';
-		unlink($path_to_file);
-		Redirect('index.php/torneos/verTorneos');
+		Redirect('index.php/torneos/OrganizarTorneos');
 	}
 
 }
