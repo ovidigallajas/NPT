@@ -44,6 +44,13 @@
 					echo "<a class='nav-link' href='".base_url()."index.php/usuarios/verUsuarios'>Usuarios</a>";
 					echo '</li>';
 				}?>
+				<?php
+				if($this->session->userdata('logueado')){
+					echo '<li class="nav-item">';
+					echo '<a class="nav-link" href="'.base_url().'index.php/equipos/verEquipos">Equipos</a>';
+					echo '</li>';
+				}
+				?>
 				<li class="nav-item">
 					<a class="nav-link" href="<?= base_url() ?>index.php/usuarios/verCuentas">Mi Cuenta</a>
 				</li>

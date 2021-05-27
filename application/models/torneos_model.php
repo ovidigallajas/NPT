@@ -15,7 +15,7 @@ class torneos_model extends CI_Model {
 	}
 
 	public function ver_mis_torneos($id){
-		$this->db->select('t.*,jt.*,j.nombre as nombreJuego,j.imagenJuego,p.nombre as nombrePlataforma,DATE_FORMAT(t.fechaInicio, "%d/%m/%Y") as fechaInicio,DATE_FORMAT(t.fechaFin, "%d/%m/%Y") as fechaFin');
+		$this->db->select('t.*,jt.*,j.nombre as nombreJuego,j.idJuego as idJuego,j.imagenJuego,p.idPlataforma as idPlataforma,p.nombre as nombrePlataforma,DATE_FORMAT(t.fechaInicio, "%d/%m/%Y") as fechaInicio,DATE_FORMAT(t.fechaFin, "%d/%m/%Y") as fechaFin');
 		$this->db->from('torneos t');
 		$this->db->join('juegotorneo jt', 't.idTorneo = jt.idTorneo');
 		$this->db->join('juegos j', 'jt.idJuego = j.idJuego');
@@ -48,7 +48,7 @@ class torneos_model extends CI_Model {
 		return $this->db->insert('juegotorneo',$data2);
 	}
 
-	public function editar_torneo($id,$nombre,$precioIns,$premio,$maxJugadores,$maxJugadoresPorEquipo,$fechaInicio,$fechaFin,$rondas,$organizador)
+	public function editar_torneo($id,$nombre,$precioIns,$premio,$maxJugadores,$maxJugadoresPorEquipo,$fechaInicio,$fechaFin,$rondas,$juego,$plataforma)
 	{
 		$this->db->where('idTorneo', $id);
 		$this->db->set('nombre', $nombre);
@@ -59,8 +59,12 @@ class torneos_model extends CI_Model {
 		$this->db->set('fechaInicio', $fechaInicio);
 		$this->db->set('fechaFin', $fechaFin);
 		$this->db->set('numRondas', $rondas);
-		$this->db->set('idOrganizador', $organizador);
-		return $this->db->update('torneos');
+		$this->db->update('torneos');
+
+		$this->db->where('idTorneo', $id);
+		$this->db->set('idJuego', $juego);
+		$this->db->set('idPlataforma', $plataforma);
+		return $this->db->update('juegotorneo');
 	}
 
 	public function eliminar_torneo($id){
@@ -68,10 +72,11 @@ class torneos_model extends CI_Model {
 		$this->db->delete('torneos', array('idTorneo' => $id));
 	}
 
-	public function comprobarTorneo($nombre){
+	public function comprobarTorneo($id,$nombre){
 		$this->db->select('nombre');
 		$this->db->from('torneos');
-		$this->db->where('nombre', $nombre);
+		$this->db->where('idTorneo != ',$id);
+		$this->db->where('nombre',$nombre);
 		$consulta = $this->db->get();
 		return $consulta->num_rows();
 	}

@@ -71,7 +71,21 @@
 				echo "<td class='text-center'>".$row->maxJugadores."</td>";
 				echo "<td class='text-center'>".$row->precioInscripcion."€</td>";
 				echo "<td class='text-center'>".$row->premio."€</td>";
-				echo '<td><a href="'.base_url().'index.php/torneos/editarTorneo?id='.$row->idTorneo.'&n='.$row->nombre.'"><i class="fas fa-edit"></i></a></td>';
+				/*$datos = array(
+					'idTorneo' => $row->idTorneo,
+					'idJuego' => $row->idJuego,
+					'nombre' => $row->nombre,
+					'idPlataforma' => $row->idPlataforma,
+					'fechaInicio' => $row->fechaInicio,
+					'fechaFin' => $row->fechaFin,
+					'maxJugadores' => $row->maxJugadores,
+					'maxJugadoresEquipos' => $row->numMaxJugadoresEquipo,
+					'pInscripcion' => $row->precioInscripcion,
+					'premio' => $row->premio,
+					'rondas' => $row->numRondas
+				);*/
+				//$data=urlencode(serialize($datos));
+				echo '<td><a href="'.base_url().'index.php/torneos/editarTorneo?i='.$row->idTorneo.'&j='.$row->idJuego.'&n='.$row->nombre.'&p='.$row->idPlataforma.'&fi='.$row->fechaInicio.'&ff='.$row->fechaFin.'&mj='.$row->maxJugadores.'&mje='.$row->numMaxJugadoresEquipo.'&pi='.$row->precioInscripcion.'&pr='.$row->premio.'&r='.$row->numRondas.'"><i class="fas fa-edit"></i></a></td>';
 				echo '<td><a href="'.base_url().'index.php/torneos/eliminarTorneo?id='.$row->idTorneo.'"><i class="fas fa-trash"></i></a></td>';
 				echo '</tr>';
 			}?>
