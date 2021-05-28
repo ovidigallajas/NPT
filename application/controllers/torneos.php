@@ -98,7 +98,7 @@ class torneos extends CI_Controller
 	public function editarTorneo($mensaje = "")
 	{
 		/**
-		 * unserialize: vuelve a pasar un valor compactado a un dato de tipo array
+		 * Recojo todas las variables pasadas por url y las envio al formulario
 		 */
 		//$data=unserialize(urldecode($this->input->get('i')));
 		//$data=unserialize($this->input->get('i'));
@@ -175,7 +175,7 @@ class torneos extends CI_Controller
 			$fechaFin= $fechaFin->format('Y-m-d');
 			$this->load->model('torneos_model');
 			if ($this->torneos_model->comprobarTorneo($id,$nombre) > 0) {
-				$datos["mensaje"] = "El nombre del torneo introducido ya existe ".$this->torneos_model->comprobarTorneo($id,$nombre)."";
+				$datos["mensaje"] = "El nombre del torneo introducido ya existe";
 				$this->load->view('torneos/EditarTorneo', $datos);
 			} else {
 				if ($this->torneos_model->editar_torneo($id,$nombre, $pinscripcion, $premio, $numJugadores, $numJugadoresEquipo, $fechaInicio, $fechaFin,$rondas,$juego,$plataforma)) {

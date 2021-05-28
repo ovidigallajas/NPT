@@ -22,91 +22,64 @@ class equipos extends CI_Controller {
 
 	public function AnadirEquipo() {
 		$data = array();
-		$this->load->view('videojuegos/AnadirPlataforma', $data);
+		$this->load->view('equipos/AnadirEquipos', $data);
 	}
 
 	public function AnadirEquipo_post(){
 		$this->form_validation->set_rules('nombre', 'Nombre', 'required');
-		//$this->form_validation->set_rules('imagen', 'Imagen', 'required');
+		$this->form_validation->set_rules('maxJugadores', 'Máximo de Jugadores', 'required');
 		$this->form_validation->set_message('required','El campo %s es obligatorio');
 		if($this->form_validation->run()!=false) {
 			$nombre = $this->input->post('nombre');
-			$this->load->model('videojuegos_model');
-			if($this->videojuegos_model->comprobarPlataforma($nombre)>0){
-				$datos["mensaje"] = "El nombre de la plataforma introducida ya existe";
-				$this->load->view('videojuegos/AnadirPlataforma', $datos);
+			$maxJugadores = $this->input->post('maxJugadores');
+			$this->load->model('equipos_model');
+			if($this->equipos_model->comprobarEquipo("",$nombre)>0){
+				$datos["mensaje"] = "El nombre del equipo introducido ya existe";
+				$this->load->view('equipos/AnadirEquipos', $datos);
 			}else {
-
-				$config['upload_path'] = "recursos/imagenes/";
-				$config['file_name'] = $nombre;
-				$config['allowed_types'] = "jpg|png|jpeg";
-
-				$this->load->library('upload', $config);
-
-				if (!$this->upload->do_upload()) {
-					$datos["mensaje"] = "No se ha registrado correctamente";
-					$this->load->view('videojuegos/AnadirPlataforma', $datos);
+				if ($this->equipos_model->anadir_equipo($nombre,$maxJugadores,$this->session->userdata('id'))) {
+					Redirect("index.php/equipos/verEquipos");
 				} else {
-					$this->load->model('videojuegos_model');
-					$datos["img"] = $this->upload->data();
-
-					if ($this->videojuegos_model->anadir_plataforma($nombre, $datos["img"]["file_name"])) {
-						Redirect("index.php/videojuegos/verPlataformas");
-					} else {
-						$datos["mensaje"] = "No se ha registrado correctamente";
-						$this->load->view('videojuegos/AnadirPlataforma', $datos);
-					}
+					$datos["mensaje"] = "No se ha añadido correctamente";
+					$this->load->view('equipos/AnadirEquipos', $datos);
 				}
 			}
 		}else{
 			$datos['mensaje']="";
-			$this->load->view('videojuegos/AnadirPlataforma', $datos);
+			$this->load->view('equipos/AnadirEquipos', $datos);
 		}
 	}
 
 	public function editarEquipo(){
 		$data = array(
-			'id' => $this->input->get('id'),
-			'nombre' => $this->input->get('n')
+			'idEquipo' => $this->input->get('i'),
+			'nombre' => $this->input->get('n'),
+			'maxJugadores' => $this->input->get('m')
 		);
-		$this->load->view('videojuegos/EditarPlataforma', $data);
+		$this->load->view('equipos/EditarEquipos', $data);
 	}
 
 	public function editarEquipo_post(){
 		$this->form_validation->set_rules('nombre', 'Nombre', 'required');
-		//$this->form_validation->set_rules('imagen', 'Imagen', 'required');
+		$this->form_validation->set_rules('maxJugadores', 'Máximo de Jugadores', 'required');
 		$this->form_validation->set_message('required','El campo %s es obligatorio');
 		if($this->form_validation->run()!=false) {
 			$nombre = $this->input->post('nombre');
-			$id = $this->input->post('id');
-			$this->load->model('videojuegos_model');
-			if($this->videojuegos_model->comprobarPlataforma($nombre)>0){
-				$datos["mensaje"] = "El nombre de la plataforma introducida ya existe";
+			$id = $this->input->post('idEquipo');
+			$maxJugadores = $this->input->post('maxJugadores');
+			$this->load->model('equipos_model');
+			if($this->equipos_model->comprobarEquipo($id,$nombre)>0){
+				$datos["mensaje"] = "El nombre del equipo introducido ya existe";
 				$datos["nombre"] = $nombre;
-				$datos["id"] = $id;
-				$this->load->view('videojuegos/EditarPlataforma', $datos);
+				$datos["idEquipo"] = $id;
+				$datos["maxJugadores"] = $maxJugadores;
+				$this->load->view('equipos/EditarEquipos', $datos);
 			}else {
-
-				$config['upload_path'] = "recursos/imagenes/";
-				$config['file_name'] = $nombre;
-				$config['allowed_types'] = "jpg|png|jpeg";
-				$config['overwrite'] = true;
-
-				$this->load->library('upload', $config);
-
-				if (!$this->upload->do_upload()) {
-					$datos["mensaje"] = "No se ha editado correctamente";
-					$this->load->view('videojuegos/EditarPlataforma', $datos);
+				if ($this->equipos_model->editar_equipo($id,$nombre,$maxJugadores)) {
+					Redirect("index.php/equipos/verEquipos");
 				} else {
-					$this->load->model('videojuegos_model');
-					$datos["img"] = $this->upload->data();
-
-					if ($this->videojuegos_model->editar_plataforma($id, $nombre, $datos["img"]["file_name"])) {
-						Redirect("index.php/videojuegos/verPlataformas");
-					} else {
-						$datos["mensaje"] = "No se ha editado correctamente";
-						$this->load->view('videojuegos/EditarPlataforma', $datos);
-					}
+					$datos["mensaje"] = "No se ha añadido correctamente";
+					$this->load->view('equipos/AnadirEquipos', $datos);
 				}
 			}
 		}else{

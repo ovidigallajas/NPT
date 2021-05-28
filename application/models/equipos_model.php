@@ -20,12 +20,11 @@ class equipos_model extends CI_Model {
 		return $this->db->insert('equipos', $data);
 	}
 
-	public function editar_equipo($id,$nombre,$maxjugadores,$jugadores)
+	public function editar_equipo($id,$nombre,$maxjugadores)
 	{
 		$this->db->where('idEquipo', $id);
 		$this->db->set('nombre', $nombre);
 		$this->db->set('maxJugadores', $maxjugadores);
-		$this->db->set('numJugadores', $jugadores);
 		return $this->db->update('equipos');
 	}
 

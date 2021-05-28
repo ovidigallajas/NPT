@@ -40,7 +40,7 @@
 <h1>Equipos</h1><br>
 <?php
 if($this->session->userdata('logueado')) {
-	echo '<p ><a href = "'.base_url().'index.php/videojuegos/AnadirPlataforma" > Añadir</a ></p >';
+	echo '<p ><a href = "'.base_url().'index.php/equipos/AnadirEquipo" >Añadir Equipo</a ></p >';
 }
 ?>
 <div class="table-responsive container">
@@ -61,7 +61,7 @@ if($this->session->userdata('logueado')) {
 			echo "<td class='text-center'>".$row->numJugadores."</td>";
 			echo "<td class='text-center'>".$row->maxJugadores."</td>";
 			if($this->session->userdata('id')==$row->idCreadorEquipo){
-				echo '<td><a href="'.base_url().'index.php/equipos/editarEquipo?i='.$row->idEquipo.'&n='.$row->nombre.'&m='.$row->maxJugadores.'&j='.$row->numJugadores.'"><i class="fas fa-edit"></i></a></td>';
+				echo '<td><a href="'.base_url().'index.php/equipos/editarEquipo?i='.$row->idEquipo.'&n='.$row->nombre.'&m='.$row->maxJugadores.'"><i class="fas fa-edit"></i></a></td>';
 			}
 			if($this->session->userdata('id')==$row->idCreadorEquipo){
 				echo '<td><a href="'.base_url().'index.php/equipos/eliminarEquipo?i='.$row->idEquipo.'"><i class="fas fa-trash"></i></a></td>';
