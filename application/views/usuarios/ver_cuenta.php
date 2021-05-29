@@ -1,3 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title> Plataformas </title>
+	<style>
+		p > a{
+			text-align: center;
+		}
+		a{
+			text-decoration: none !important;
+			font-weight: bold;
+			font-size: 20px;
+		}
+		h1{
+			font-family:Courier New !important;
+			text-align: center;
+		}
+		p{
+			color: red ;
+			width:500px ;
+		}
+	</style>
+</head>
+<body>
 <?php $this->load->view('templates/nav')?>
 <div id="carouselExampleSlidesOnly" class="carousel slide" data-ride="carousel">
 	<div class="carousel-inner">
@@ -9,7 +33,7 @@
 	<div class="titulo">
 		<h1>Mis Datos</h1>
 	</div>
-	<div id="formulario">
+	<div>
 		<form method="post" action="<?php echo base_url() ?>index.php/usuarios/modificarCuentas">
 			<table class="table">
 				<thead>
@@ -29,10 +53,16 @@
 					</tr>
 				</tbody>
 			</table>
-			<div>
-				<p>¿Cansado de tu cuenta? Puedes darte de baja <a href="<?php echo base_url() ?>index.php/usuarios/eliminarUsuario">aquí</a></p>
+			<div class="padding-left">
+				<p><?php if(isset($mensaje)) echo $mensaje; ?></p>
+				<?=validation_errors();?>
 			</div>
-			<input type="submit" value="Editar" class="btn btn-default"/>
+			<div class="padding-left">
+				<span>¿Cansado de tu cuenta? Puedes darte de baja <a href="<?php echo base_url() ?>index.php/usuarios/eliminarUsuario">aquí</a></span>
+			</div>
+			<input type="submit" value="Editar" class="btn btn-default padding-left"/><br><br>
 		</form>
 	</div>
 <?php $this->load->view('templates/footer')?>
+</body>
+</html>

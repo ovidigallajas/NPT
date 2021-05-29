@@ -4,6 +4,10 @@ class torneos_model extends CI_Model {
 		parent::__construct();
 	}
 
+	/**
+	 * Saca los torneos y sus datos
+	 * @return mixed
+	 */
 	public function ver_torneos(){
 		$this->db->select('t.*,jt.*,j.nombre as nombreJuego,j.imagenJuego,p.nombre as nombrePlataforma');
 		$this->db->from('torneos t');
@@ -14,6 +18,11 @@ class torneos_model extends CI_Model {
 		return $query;
 	}
 
+	/**
+	 * Saca los torneos(y sus datos) creados por un usuario
+	 * @param $id integer
+	 * @return mixed
+	 */
 	public function ver_mis_torneos($id){
 		$this->db->select('t.*,jt.*,j.nombre as nombreJuego,j.idJuego as idJuego,j.imagenJuego,p.idPlataforma as idPlataforma,p.nombre as nombrePlataforma,DATE_FORMAT(t.fechaInicio, "%d/%m/%Y") as fechaInicio,DATE_FORMAT(t.fechaFin, "%d/%m/%Y") as fechaFin');
 		$this->db->from('torneos t');
@@ -25,6 +34,21 @@ class torneos_model extends CI_Model {
 		return $query;
 	}
 
+	/**
+	 * Añade un torneo(en la tabla torneos y juegotorneo)
+	 * @param $nombre string
+	 * @param $precioIns float
+	 * @param $premio float
+	 * @param $maxJugadores string
+	 * @param $maxJugadoresPorEquipo string
+	 * @param $fechaInicio string
+	 * @param $fechaFin string
+	 * @param $rondas string
+	 * @param $organizador string
+	 * @param $juego integer
+	 * @param $plataforma integer
+	 * @return mixed
+	 */
 	public function anadir_torneo($nombre,$precioIns,$premio,$maxJugadores,$maxJugadoresPorEquipo,$fechaInicio,$fechaFin,$rondas,$organizador,$juego,$plataforma)
 	{
 		$data = array(
@@ -48,6 +72,21 @@ class torneos_model extends CI_Model {
 		return $this->db->insert('juegotorneo',$data2);
 	}
 
+	/**
+	 * Edita un torneo
+	 * @param $id integer
+	 * @param $nombre string
+	 * @param $precioIns float
+	 * @param $premio float
+	 * @param $maxJugadores string
+	 * @param $maxJugadoresPorEquipo string
+	 * @param $fechaInicio string
+	 * @param $fechaFin string
+	 * @param $rondas string
+	 * @param $juego string
+	 * @param $plataforma string
+	 * @return mixed
+	 */
 	public function editar_torneo($id,$nombre,$precioIns,$premio,$maxJugadores,$maxJugadoresPorEquipo,$fechaInicio,$fechaFin,$rondas,$juego,$plataforma)
 	{
 		$this->db->where('idTorneo', $id);
@@ -67,11 +106,21 @@ class torneos_model extends CI_Model {
 		return $this->db->update('juegotorneo');
 	}
 
+	/**
+	 * Elimina un torneo
+	 * @param $id integer
+	 */
 	public function eliminar_torneo($id){
 		$this->db->delete('juegotorneo', array('idTorneo' => $id));
 		$this->db->delete('torneos', array('idTorneo' => $id));
 	}
 
+	/**
+	 * Comprueba si existe el nombre de un torneo
+	 * @param $id integer
+	 * @param $nombre string
+	 * @return mixed
+	 */
 	public function comprobarTorneo($id,$nombre){
 		$this->db->select('nombre');
 		$this->db->from('torneos');

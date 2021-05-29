@@ -26,14 +26,23 @@ class usuarios extends CI_Controller {
 	 */
 	public function iniciar_sesion_post() {
 		if ($this->input->post()) {
+			/**
+			 * Comprueba si están todos los campos rellenos
+			 */
 			$this->form_validation->set_rules('nick', 'Nombre de Usuario', 'required');
 			$this->form_validation->set_rules('password', 'Contraseña', 'required');
 			$this->form_validation->set_message('required','El campo %s es obligatorio');
 			if($this->form_validation->run()!=false) {
+				/**
+				 * Recoge los datos enviados por post
+				 */
 				$datos["mensaje"]="";
 				$nick = $this->input->post('nick');
 				$password = $this->input->post('password');
 				$this->load->model('usuario_model');
+				/**
+				 * Comprueba el usuario y la contraseña y si son correctos crea las variables de sesión
+				 */
 				$usuario = $this->usuario_model->usuario_por_nick_password($nick, $password);
 				if ($usuario) {
 					$usuario_data = array(
@@ -58,7 +67,7 @@ class usuarios extends CI_Controller {
 	}
 
 	/**
-	 * Crea las variables de sesión y manda a la página de inicio con el usuario ya logueado
+	 * Si es correcto el inicio de sesión manda a la página de inicio y envía las variables de sesión
 	 */
 	public function logueado() {
 		if($this->session->userdata('logueado')){
@@ -93,6 +102,9 @@ class usuarios extends CI_Controller {
 	 */
 	public function modificarCuentas(){
 		if ($this->input->post()) {
+			/**
+			 * Comprueba que estén todos los campos rellenos y que el email es válido
+			 */
 			$this->form_validation->set_rules('nick', 'Nombre de Usuario', 'required');
 			$this->form_validation->set_rules('nombre', 'Nombre', 'required');
 			$this->form_validation->set_rules('correo', 'Correo', 'required|valid_email');
@@ -100,18 +112,47 @@ class usuarios extends CI_Controller {
 			$this->form_validation->set_message('required','El campo %s es obligatorio');
 			$this->form_validation->set_message('valid_email','El correo no es valido');
 			if($this->form_validation->run()!=false) {
+				/**
+				 * Recoge los datos enviados por post
+				 */
 				$id = $this->session->userdata('id');
 				$nick = $this->input->post('nick');
 				$nombre = $this->input->post('nombre');
 				$correo = $this->input->post('correo');
 				$edad = $this->input->post('edad');
 				$this->load->model('usuario_model');
-				$this->usuario_model->editar_cuenta($id, $nick, $nombre, $correo, $edad);
-				$datos["mensaje"]="Cambio realizado con éxito";
+				/**
+				 * Comprueba si el nombre de usuario ya existe
+				 */
+				if($this->usuario_model->comprobarUsuario($id,$nick)>0){
+					$datos['usuarios'] = $this->usuario_model->ver_cuenta($id);
+					$datos["mensaje"] = "El nombre de usuario introducido ya existe";
+					$this->load->view('usuarios/ver_cuenta',$datos);
+				}else {
+					/**
+					 * Comprueba si el email ya existe
+					 */
+					if($this->usuario_model->comprobarCorreo("",$correo)>0) {
+						$datos['usuarios'] = $this->usuario_model->ver_cuenta($id);
+						$datos["mensaje"] = "El correo introducido ya existe";
+						$this->load->view('usuarios/ver_cuenta',$datos);
+					}else {
+						if($this->usuario_model->editar_cuenta($id, $nick, $nombre, $correo, $edad)){
+							$datos['usuarios'] = $this->usuario_model->ver_cuenta($id);
+							$datos["mensaje"] = "Cambio realizado con éxito";
+							$this->load->view('usuarios/ver_cuenta',$datos);
+						}else{
+							$datos['usuarios'] = $this->usuario_model->ver_cuenta($id);
+							$datos["mensaje"] = "No se ha editado correctamente";
+							$this->load->view('usuarios/ver_cuenta',$datos);
+						}
+					}
+				}
 			}else{
 				$datos["mensaje"]="";
+				$this->load->view('usuarios/ver_cuenta',$datos);
 			}
-			redirect('index.php/usuarios/verCuentas');
+			//redirect('index.php/usuarios/verCuentas');
 		} else {
 			$this->iniciar_sesion();
 		}
@@ -130,6 +171,9 @@ class usuarios extends CI_Controller {
 	 */
 	public function registroUsuarios(){
 		if($this->input->post('password')==$this->input->post('password2')){
+			/**
+			 * Comprueba que estén todos los campos rellenos y que el email es válido
+			 */
 			$this->form_validation->set_rules('nick', 'Nombre de Usuario', 'required');
 			$this->form_validation->set_rules('nombre', 'Nombre', 'required');
 			$this->form_validation->set_rules('password', 'Contraseña', 'required');
@@ -139,20 +183,32 @@ class usuarios extends CI_Controller {
 			$this->form_validation->set_message('required','El campo %s es obligatorio');
 			$this->form_validation->set_message('valid_email','El correo no es valido');
 			if($this->form_validation->run()!=false) {
+				/**
+				 * Recoge los datos enviados por post
+				 */
 				$nick = $this->input->post('nick');
 				$nombre = $this->input->post('nombre');
 				$correo = $this->input->post('correo');
 				$password = $this->input->post('password');
 				$edad = $this->input->post('edad');
 				$this->load->model('usuario_model');
-				if($this->usuario_model->comprobarUsuario($nick)>0){
+				/**
+				 * Comprueba si el nombre de usuario introducido ya existe
+				 */
+				if($this->usuario_model->comprobarUsuario("",$nick)>0){
 					$datos["mensaje"] = "El nombre de usuario introducido ya existe";
 					$this->load->view('usuarios/registro',$datos);
 				}else{
-					if($this->usuario_model->comprobarCorreo($correo)>0) {
+					/**
+					 * Comprueba si el correo introducido ya existe
+					 */
+					if($this->usuario_model->comprobarCorreo("",$correo)>0) {
 						$datos["mensaje"] = "El correo introducido ya existe";
 						$this->load->view('usuarios/registro',$datos);
 					}else{
+						/**
+						 * Realiza el registro
+						 */
 						if ($this->usuario_model->registrar_usuario($nick, $nombre, $correo, $password, $edad)) {
 							$datos['mensaje'] = "Registro completado correctamente";
 							$this->load->view('usuarios/iniciar_sesion', $datos);
@@ -190,7 +246,7 @@ class usuarios extends CI_Controller {
 	}
 
 	/**
-	 * Eliminar un usuarios
+	 * Eliminar un usuario (administrador)
 	 */
 	public function  eliminarUsuarios(){
 		$id = $this->input->get('id');
@@ -200,7 +256,7 @@ class usuarios extends CI_Controller {
 	}
 
 	/**
-	 * Eliminar usuario
+	 * Eliminar usuario (el usuario borra su cuenta)
 	 */
 	public function  eliminarUsuario(){
 		if($this->session->userdata('logueado')){
@@ -235,15 +291,15 @@ class usuarios extends CI_Controller {
 			$config['smtp_host']    = 'ssl://smtp.gmail.com';
 			$config['smtp_port']    = '465';
 			$config['smtp_timeout'] = '7';
-			$config['smtp_user']    = 'ovidigal88@gmail.com';
-			$config['smtp_pass']    = 'Ovl924492594';
+			$config['smtp_user']    = 'nonprofessionaltournaments@gmail.com';
+			$config['smtp_pass']    = 'marcosyoscar';
 			$config['charset']    = 'utf-8';
 			$config['newline']    = "\r\n";
 			$config['mailtype'] = 'html'; // or html
 			$config['validation'] = TRUE;
 			$this->email->initialize($config);
 			$this->email->to($correo);
-			$this->email->from('ovidigal88@gmail.com','NPT');
+			$this->email->from('nonprofessionaltournaments@gmail.com','NPT');
 			$this->email->subject('Recuperación de contraseña');
 			foreach ($contrasena as $indice => $row){
 				$this->email->message('Estmado '.$nombre.',<br/>

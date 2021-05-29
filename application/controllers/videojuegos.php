@@ -13,6 +13,9 @@ class videojuegos extends CI_Controller {
 		parent::__construct();
 	}
 
+	/**
+	 * Saca todas las plataformas
+	 */
 	public function verPlataformas(){
 			$this->load->model('videojuegos_model');
 			$data=array();
@@ -20,23 +23,37 @@ class videojuegos extends CI_Controller {
 			$this->load->view('videojuegos/VerPlataformas',$data);
 	}
 
+	/**
+	 * Carga el formulario para añadir una plataforma
+	 */
 	public function AnadirPlataforma() {
 		$data = array();
 		$this->load->view('videojuegos/AnadirPlataforma', $data);
 	}
 
+	/**
+	 * Recoge los campos del formulario y añade la plataforma
+	 */
 	public function AnadirPlataforma_post(){
+		/**
+		 * Comprueba si se ha introducido el nombre
+		 */
 			$this->form_validation->set_rules('nombre', 'Nombre', 'required');
 			//$this->form_validation->set_rules('imagen', 'Imagen', 'required');
 			$this->form_validation->set_message('required','El campo %s es obligatorio');
 			if($this->form_validation->run()!=false) {
+				/**
+				 * Comprueba si el nombre de la plataforma no existe
+				 */
 				$nombre = $this->input->post('nombre');
 				$this->load->model('videojuegos_model');
-				if($this->videojuegos_model->comprobarPlataforma($nombre)>0){
+				if($this->videojuegos_model->comprobarPlataforma("",$nombre)>0){
 					$datos["mensaje"] = "El nombre de la plataforma introducida ya existe";
 					$this->load->view('videojuegos/AnadirPlataforma', $datos);
 				}else {
-
+					/**
+					 * Subir imagen de la plataforma a la carpeta de imagenes
+					 */
 					$config['upload_path'] = "recursos/imagenes/";
 					$config['file_name'] = $nombre;
 					$config['allowed_types'] = "jpg|png|jpeg";
@@ -47,6 +64,9 @@ class videojuegos extends CI_Controller {
 						$datos["mensaje"] = "No se ha registrado correctamente";
 						$this->load->view('videojuegos/AnadirPlataforma', $datos);
 					} else {
+						/**
+						 * Añadir la plataforma
+						 */
 						$this->load->model('videojuegos_model');
 						$datos["img"] = $this->upload->data();
 
@@ -64,6 +84,9 @@ class videojuegos extends CI_Controller {
 			}
 	}
 
+	/**
+	 * Carga el formulario para editar una plataforma
+	 */
 	public function editarPlataforma(){
 		$data = array(
 			'id' => $this->input->get('id'),
@@ -72,6 +95,9 @@ class videojuegos extends CI_Controller {
 		$this->load->view('videojuegos/EditarPlataforma', $data);
 	}
 
+	/**
+	 * Recoge los campos del formulario y edita la plataforma
+	 */
 	public function editarPlataforma_post(){
 		$this->form_validation->set_rules('nombre', 'Nombre', 'required');
 		//$this->form_validation->set_rules('imagen', 'Imagen', 'required');
@@ -80,13 +106,18 @@ class videojuegos extends CI_Controller {
 			$nombre = $this->input->post('nombre');
 			$id = $this->input->post('id');
 			$this->load->model('videojuegos_model');
-			if($this->videojuegos_model->comprobarPlataforma($nombre)>0){
+			/**
+			 * Comprueba si el nombre de la plataforma no existe
+			 */
+			if($this->videojuegos_model->comprobarPlataforma($id,$nombre)>0){
 				$datos["mensaje"] = "El nombre de la plataforma introducida ya existe";
 				$datos["nombre"] = $nombre;
 				$datos["id"] = $id;
 				$this->load->view('videojuegos/EditarPlataforma', $datos);
 			}else {
-
+				/**
+				 * Sube la imagen de la plataforma
+				 */
 				$config['upload_path'] = "recursos/imagenes/";
 				$config['file_name'] = $nombre;
 				$config['allowed_types'] = "jpg|png|jpeg";
@@ -98,6 +129,9 @@ class videojuegos extends CI_Controller {
 					$datos["mensaje"] = "No se ha editado correctamente";
 					$this->load->view('videojuegos/EditarPlataforma', $datos);
 				} else {
+					/**
+					 * Edita la plataforma
+					 */
 					$this->load->model('videojuegos_model');
 					$datos["img"] = $this->upload->data();
 
@@ -115,6 +149,9 @@ class videojuegos extends CI_Controller {
 		}
 	}
 
+	/**
+	 * Elimina una plataforma y su imagen
+	 */
 	public function  eliminarPlataformas(){
 		$id = $this->input->get('id');
 		$imagen = $this->input->get('i');
@@ -125,6 +162,9 @@ class videojuegos extends CI_Controller {
 		Redirect('index.php/videojuegos/verPlataformas');
 	}
 
+	/**
+	 * Saca todos los videojuegos
+	 */
 	public function verVideojuegos(){
 		$this->load->model('videojuegos_model');
 		$data=array();
@@ -132,12 +172,21 @@ class videojuegos extends CI_Controller {
 		$this->load->view('videojuegos/VerVideojuegos',$data);
 	}
 
+	/**
+	 * Carga el formulario para añadir un videojuego
+	 */
 	public function AnadirVideojuego() {
 		$data = array();
 		$this->load->view('videojuegos/AnadirVideojuego', $data);
 	}
 
+	/**
+	 * Recoge los datos del formulario y añade el videojuego
+	 */
 	public function AnadirVideojuego_post(){
+		/**
+		 * Comprueba que no se dejan campos vacíos
+		 */
 		$this->form_validation->set_rules('nombre', 'Nombre', 'required');
 		$this->form_validation->set_rules('descripcion', 'Descripción', 'required');
 		$this->form_validation->set_rules('tipo', 'Tipo', 'required');
@@ -145,16 +194,24 @@ class videojuegos extends CI_Controller {
 		//$this->form_validation->set_rules('imagen', 'Imagen', 'required');
 		$this->form_validation->set_message('required','El campo %s es obligatorio');
 		if($this->form_validation->run()!=false) {
+			/**
+			 * Recoge los datos del formulario
+			 */
 			$nombre = $this->input->post('nombre');
 			$descripcion = $this->input->post('descripcion');
 			$tipo = $this->input->post('tipo');
 			$edad = $this->input->post('edad');
 			$this->load->model('videojuegos_model');
-			if($this->videojuegos_model->comprobarJuego($nombre)>0){
+			/**
+			 * Comprueba si el nombre del vieojuego ya existe
+			 */
+			if($this->videojuegos_model->comprobarJuego("",$nombre)>0){
 				$datos["mensaje"] = "El nombre del videojuego introducido ya existe";
 				$this->load->view('videojuegos/AnadirVideojuego', $datos);
 			}else {
-
+				/**
+				 * Sube la imagen del vieojuego
+				 */
 				$config['upload_path'] = "recursos/imagenes/";
 				$config['file_name'] = $nombre;
 				$config['allowed_types'] = "jpg|png|jpeg";
@@ -165,6 +222,9 @@ class videojuegos extends CI_Controller {
 					$datos["mensaje"] = "No se ha registrado correctamente";
 					$this->load->view('videojuegos/AnadirVideojuego', $datos);
 				} else {
+					/**
+					 * Añade el videojuego
+					 */
 					$this->load->model('videojuegos_model');
 					$datos["img"] = $this->upload->data();
 
@@ -182,6 +242,9 @@ class videojuegos extends CI_Controller {
 		}
 	}
 
+	/**
+	 * Carga el formulario para editar un videojuego
+	 */
 	public function editarVideojuego(){
 		$data = array(
 			'id' => $this->input->get('id'),
@@ -193,7 +256,13 @@ class videojuegos extends CI_Controller {
 		$this->load->view('videojuegos/EditarVideojuego', $data);
 	}
 
+	/**
+	 * Recoge los datos del formulario y edita el videojuego
+	 */
 	public function editarVideojuego_post(){
+		/**
+		 * Comprueba que no se dejen campos vacíos
+		 */
 		$this->form_validation->set_rules('nombre', 'Nombre', 'required');
 		$this->form_validation->set_rules('descripcion', 'Descripción', 'required');
 		$this->form_validation->set_rules('tipo', 'Tipo', 'required');
@@ -201,13 +270,19 @@ class videojuegos extends CI_Controller {
 		//$this->form_validation->set_rules('imagen', 'Imagen', 'required');
 		$this->form_validation->set_message('required','El campo %s es obligatorio');
 		if($this->form_validation->run()!=false) {
+			/**
+			 * Recoge los datos enviados por el formulario
+			 */
 			$id = $this->input->post('id');
 			$nombre = $this->input->post('nombre');
 			$tipo = $this->input->post('tipo');
 			$edad = $this->input->post('edad');
 			$descripcion = $this->input->post('descripcion');
 			$this->load->model('videojuegos_model');
-			if($this->videojuegos_model->comprobarJuego($nombre)>0){
+			/**
+			 * Comprueba que el nombre del videojuego introducido no existe
+			 */
+			if($this->videojuegos_model->comprobarJuego($id,$nombre)>0){
 				$datos = array(
 					'mensaje'=> 'El nombre del videojuego introducido ya existe',
 					'nombre' => $nombre,
@@ -218,10 +293,9 @@ class videojuegos extends CI_Controller {
 				);
 				$this->load->view('videojuegos/EditarVideojuego', $datos);
 			}else {
-				$descripcion = $this->input->post('descripcion');
-				$tipo = $this->input->post('tipo');
-				$edad = $this->input->post('edad');
-
+				/**
+				 * Sube la imgane del videojuego
+				 */
 				$config['upload_path'] = "recursos/imagenes/";
 				$config['file_name'] = $nombre;
 				$config['allowed_types'] = "jpg|png|jpeg";
@@ -233,6 +307,9 @@ class videojuegos extends CI_Controller {
 					$datos["mensaje"] = "No se ha editado correctamente";
 					$this->load->view('videojuegos/EditarVideojuegos', $datos);
 				} else {
+					/**
+					 * Edita el videojuego
+					 */
 					$this->load->model('videojuegos_model');
 					$datos["img"] = $this->upload->data();
 
@@ -250,6 +327,9 @@ class videojuegos extends CI_Controller {
 		}
 	}
 
+	/**
+	 * Elimina un videojuego y su imagen
+	 */
 	public function eliminarVideojuego(){
 		$id = $this->input->get('id');
 		$imagen = $this->input->get('i');
