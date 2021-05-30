@@ -18,11 +18,15 @@ class torneos extends CI_Controller
 	/**
 	 * Saca todos los torneos
 	 */
-	public function verTorneos()
+	public function verTorneos($mensaje="")
 	{
 		$this->load->model('torneos_model');
 		$data = array();
-		$data['torneos'] = $this->torneos_model->ver_torneos();
+		$data['mensaje']=$mensaje;
+		$data['torneosi'] = $this->torneos_model->ver_torneos_individuales($this->session->userdata('id'));
+		$data['torneose'] = $this->torneos_model->ver_torneos_equipo();
+		$data['mistorneosi'] = $this->torneos_model->ver_toneos_inscrito_indi($this->session->userdata('id'));
+		$data['mistorneose'] = $this->torneos_model->ver_toneos_inscrito_equipo($this->session->userdata('id'));
 		$this->load->view('torneos/verTorneos', $data);
 	}
 
@@ -33,7 +37,8 @@ class torneos extends CI_Controller
 	public function OrganizarTorneos($mensaje = ""){
 		$this->load->model('torneos_model');
 		$data = array();
-		$data['torneos'] = $this->torneos_model->ver_mis_torneos($this->session->userdata('id'));
+		$data['torneosi'] = $this->torneos_model->ver_mis_torneos_individuales($this->session->userdata('id'));
+		$data['torneose'] = $this->torneos_model->ver_mis_torneos_equipo($this->session->userdata('id'));
 		$data['mensaje'] = $mensaje;
 		$this->load->view('torneos/Organizador', $data);
 	}
@@ -251,6 +256,23 @@ class torneos extends CI_Controller
 			$this->load->view('torneos/EditarTorneo', $datos);
 			//$this->editarTorneo($datos['mensaje']);
 		}
+	}
+
+	/**
+	 * Inscribirse a un torneo individual
+	 */
+	public function inscribirse(){
+		$this->load->model('torneos_model');
+		$data = array();
+		$id=$this->session->userdata('id');
+		if($this->torneos_model->inscribirse($this->input->get('i'),$id)){
+			$data['mensaje']="No se ha inscrito correctamente";
+		}
+		$data['torneosi'] = $this->torneos_model->ver_torneos_individuales($id);
+		$data['torneose'] = $this->torneos_model->ver_torneos_equipo();
+		$data['mistorneosi'] = $this->torneos_model->ver_toneos_inscrito_indi($id);
+		$data['mistorneose'] = $this->torneos_model->ver_toneos_inscrito_equipo($id);
+		$this->load->view('torneos/verTorneos', $data);
 	}
 
 	/**

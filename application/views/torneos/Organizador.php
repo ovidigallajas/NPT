@@ -6,7 +6,7 @@
 		table{
 			margin:0 auto;
 		}
-		h1{
+		h1,h4{
 			font-family:Courier New !important;
 			text-align: center;
 		}
@@ -44,6 +44,7 @@
 ?>
 <div class="container-fluid">
 	<div class="table-responsive">
+		<h4>Individuales</h4>
 		<table class="table">
 			<thead>
 			<tr>
@@ -60,7 +61,7 @@
 			</tr>
 			</thead>
 			<tbody>
-			<?php	foreach ($torneos->result() as $row){
+			<?php	foreach ($torneosi->result() as $row){
 				echo '<tr>';
 				echo "<td class='text-center'>".$row->nombre."</td>";
 				echo '<td scope="row" class="imagen"><img src="'.base_url().'recursos/imagenes/'.$row->imagenJuego.'" alt="'.$row->nombre.'"></td>';
@@ -85,6 +86,42 @@
 					'rondas' => $row->numRondas
 				);*/
 				//$data=urlencode(serialize($datos));
+				echo '<td><a href="'.base_url().'index.php/torneos/editarTorneo?i='.$row->idTorneo.'&j='.$row->idJuego.'&n='.$row->nombre.'&p='.$row->idPlataforma.'&fi='.$row->fechaInicio.'&ff='.$row->fechaFin.'&mj='.$row->maxJugadores.'&mje='.$row->numMaxJugadoresEquipo.'&pi='.$row->precioInscripcion.'&pr='.$row->premio.'&r='.$row->numRondas.'"><i class="fas fa-edit"></i></a></td>';
+				echo '<td><a href="'.base_url().'index.php/torneos/eliminarTorneo?id='.$row->idTorneo.'"><i class="fas fa-trash"></i></a></td>';
+				echo '</tr>';
+			}?>
+			</tbody>
+		</table>
+	</div>
+	<div class="table-responsive">
+		<h4>En Equipo</h4>
+		<table class="table">
+			<thead>
+			<tr>
+				<th scope="col" class='text-center'>Nombre</th>
+				<th scope="col" class='text-center'>Juego</th>
+				<th scope="col" class='text-center'>Plataforma</th>
+				<th scope="col" class='text-center'>Fecha Inicio</th>
+				<th scope="col" class='text-center'>Fecha Fin</th>
+				<th scope="col" class='text-center'>Inscritos</th>
+				<th scope="col" class='text-center'>Máximo de Jugadores</th>
+				<th scope="col" class='text-center'>Precio Inscripción</th>
+				<th scope="col" class='text-center'>Premio</th>
+				<th scope="col" colspan="2" class='text-center'></th>
+			</tr>
+			</thead>
+			<tbody>
+			<?php	foreach ($torneose->result() as $row){
+				echo '<tr>';
+				echo "<td class='text-center'>".$row->nombre."</td>";
+				echo '<td scope="row" class="imagen"><img src="'.base_url().'recursos/imagenes/'.$row->imagenJuego.'" alt="'.$row->nombre.'"></td>';
+				echo "<td class='text-center'>".$row->nombrePlataforma."</td>";
+				echo "<td class='text-center'>".$row->fechaInicio."</td>";
+				echo "<td class='text-center'>".$row->fechaFin."</td>";
+				echo "<td class='text-center'>".$row->inscritos."</td>";
+				echo "<td class='text-center'>".$row->numMaxJugadoresEquipo."</td>";
+				echo "<td class='text-center'>".$row->precioInscripcion."€</td>";
+				echo "<td class='text-center'>".$row->premio."€</td>";
 				echo '<td><a href="'.base_url().'index.php/torneos/editarTorneo?i='.$row->idTorneo.'&j='.$row->idJuego.'&n='.$row->nombre.'&p='.$row->idPlataforma.'&fi='.$row->fechaInicio.'&ff='.$row->fechaFin.'&mj='.$row->maxJugadores.'&mje='.$row->numMaxJugadoresEquipo.'&pi='.$row->precioInscripcion.'&pr='.$row->premio.'&r='.$row->numRondas.'"><i class="fas fa-edit"></i></a></td>';
 				echo '<td><a href="'.base_url().'index.php/torneos/eliminarTorneo?id='.$row->idTorneo.'"><i class="fas fa-trash"></i></a></td>';
 				echo '</tr>';
