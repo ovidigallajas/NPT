@@ -14,12 +14,22 @@ class equipos extends CI_Controller {
 	}
 
 	/**
+	 * Saca todos los equipos en los que este inscrito el usuario
+	 */
+	public function verMisEquipos(){
+		$this->load->model('equipos_model');
+		$data=array();
+		$data['equipos'] = $this->equipos_model->ver_mis_equipos($this->session->userdata('id'));
+		$this->load->view('equipos/VerMisEquipos',$data);
+	}
+
+	/**
 	 * Saca todos los equipos
 	 */
 	public function verEquipos(){
 		$this->load->model('equipos_model');
 		$data=array();
-		$data['equipos'] = $this->equipos_model->ver_equipos();
+		$data['equipos'] = $this->equipos_model->ver_equipos($this->session->userdata('id'));
 		$this->load->view('equipos/VerEquipos',$data);
 	}
 
@@ -119,6 +129,34 @@ class equipos extends CI_Controller {
 			$datos['mensaje']="";
 			$this->load->view('videojuegos/EditarPlataforma', $datos);
 		}
+	}
+
+	/**
+	 * Unirse a un equipo
+	 */
+	public function unirse(){
+		$this->load->model('equipos_model');
+		$data = array();
+		$id=$this->session->userdata('id');
+		if($this->equipos_model->unirse($this->input->get('i'),$id)){
+			$data['mensaje']="No se ha unido correctamente";
+		}
+		$data['equipos'] = $this->equipos_model->ver_equipos($id);
+		$this->load->view('equipos/verEquipos', $data);
+	}
+
+	/**
+	 * Salirse de un equipo
+	 */
+	public function salirse(){
+		$this->load->model('equipos_model');
+		$data = array();
+		$id=$this->session->userdata('id');
+		if($this->equipos_model->salirse($this->input->get('i'),$id)){
+			$data['mensaje']="No se ha unido correctamente";
+		}
+		$data['equipos'] = $this->equipos_model->ver_mis_equipos($id);
+		$this->load->view('equipos/verMisEquipos', $data);
 	}
 
 	/**

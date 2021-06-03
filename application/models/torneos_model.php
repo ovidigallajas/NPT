@@ -14,9 +14,8 @@ class torneos_model extends CI_Model {
 		$this->db->join('juegotorneo jt', 't.idTorneo = jt.idTorneo');
 		$this->db->join('juegos j', 'jt.idJuego = j.idJuego');
 		$this->db->join('plataformas p', 'jt.idPlataforma = p.idPlataforma');
-		$this->db->join('inscripcionjugadores i', 'i.idTorneo = t.idTorneo');
-		$this->db->where('i.idUsuarioJugador !=',$id);
 		$this->db->where('numMaxJugadoresEquipo',null);
+		$this->db->where('t.idTorneo not in (SELECT i.idTorneo FROM inscripcionjugadores i WHERE i.idUsuarioJugador="'.$id.'")');
 		$query = $this->db->get();
 		return $query;
 	}
@@ -179,7 +178,7 @@ class torneos_model extends CI_Model {
 	}
 
 	/**
-	 * Inscribirse a un torneo
+	 * Inscribirse a un torneo individual
 	 * @param $torneo integer
 	 * @param $id integer
 	 * @return mixed
@@ -192,9 +191,22 @@ class torneos_model extends CI_Model {
 		);
 		$this->db->insert('inscripcionjugadores', $data);
 
-		$this->db->where('idTorneo', $id);
+		/*$this->db->where('idTorneo', $id);
 		$this->db->set('inscritos','inscritos'+1);
-		return $this->db->update('torneos');
+		return $this->db->update('torneos');*/
+
+		return $this->db->query("UPDATE torneos SET inscritos=inscritos+1 WHERE idTorneo='".$torneo."'");
+	}
+
+	public function desinscribirse($torneo,$id)
+	{
+		$this->db->delete('inscripcionjugadores', $data=array('idTorneo' => $torneo,'idUsuarioJugador' => $id));
+
+		/*$this->db->where('idTorneo', $id);
+		$this->db->set('inscritos','inscritos'+1);
+		return $this->db->update('torneos');*/
+
+		return $this->db->query("UPDATE torneos SET inscritos=inscritos-1 WHERE idTorneo='".$torneo."'");
 	}
 
 	/**

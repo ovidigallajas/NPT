@@ -172,6 +172,20 @@ footer p {
 	height:20px;
 	text-align:center;
 }
+.navbar .nav-item:not(:last-child) {
+	margin-right: 10px;
+}
+
+.dropdown-toggle::after {
+	transition: transform 0.15s linear;
+}
+
+.show.dropdown .dropdown-toggle::after {
+	transform: translateY(3px);
+}
+.dropdown-menu {
+	margin-top: 0;
+}
 .error{
 	color:red;
 }

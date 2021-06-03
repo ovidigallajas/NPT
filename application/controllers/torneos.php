@@ -16,18 +16,51 @@ class torneos extends CI_Controller
 	}
 
 	/**
-	 * Saca todos los torneos
+	 * Saca todos los torneos individuales
 	 */
-	public function verTorneos($mensaje="")
+	public function verTorneosIndividuales($mensaje="")
 	{
 		$this->load->model('torneos_model');
 		$data = array();
 		$data['mensaje']=$mensaje;
 		$data['torneosi'] = $this->torneos_model->ver_torneos_individuales($this->session->userdata('id'));
+		$this->load->view('torneos/verTorneosIndividuales', $data);
+	}
+
+	/**
+	 * Saca todos los torneos en equipo
+	 */
+	public function verTorneosEquipos($mensaje="")
+	{
+		$this->load->model('torneos_model');
+		$data = array();
+		$data['mensaje']=$mensaje;
 		$data['torneose'] = $this->torneos_model->ver_torneos_equipo();
+		$this->load->view('torneos/verTorneosEquipos', $data);
+	}
+
+	/**
+	 * Saca todos los torneos en individuales en los que está inscrito el usuario
+	 */
+	public function verMisTorneosIndi($mensaje="")
+	{
+		$this->load->model('torneos_model');
+		$data = array();
+		$data['mensaje']=$mensaje;
 		$data['mistorneosi'] = $this->torneos_model->ver_toneos_inscrito_indi($this->session->userdata('id'));
+		$this->load->view('torneos/verMisTorneosIndi', $data);
+	}
+
+	/**
+	 * Saca todos los torneos en equipo en los que está inscrito el usuario
+	 */
+	public function verMisTorneosEquipo($mensaje="")
+	{
+		$this->load->model('torneos_model');
+		$data = array();
+		$data['mensaje']=$mensaje;
 		$data['mistorneose'] = $this->torneos_model->ver_toneos_inscrito_equipo($this->session->userdata('id'));
-		$this->load->view('torneos/verTorneos', $data);
+		$this->load->view('torneos/verMisTorneosEquipos', $data);
 	}
 
 	/**
@@ -266,6 +299,20 @@ class torneos extends CI_Controller
 		$data = array();
 		$id=$this->session->userdata('id');
 		if($this->torneos_model->inscribirse($this->input->get('i'),$id)){
+			$data['mensaje']="No se ha inscrito correctamente";
+		}
+		$data['torneosi'] = $this->torneos_model->ver_torneos_individuales($id);
+		$this->load->view('torneos/verTorneosIndividuales', $data);
+	}
+
+	/**
+	 * Desinscribirse a un torneo individual
+	 */
+	public function desinscribirse(){
+		$this->load->model('torneos_model');
+		$data = array();
+		$id=$this->session->userdata('id');
+		if($this->torneos_model->desinscribirse($this->input->get('i'),$id)){
 			$data['mensaje']="No se ha inscrito correctamente";
 		}
 		$data['torneosi'] = $this->torneos_model->ver_torneos_individuales($id);

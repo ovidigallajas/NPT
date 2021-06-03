@@ -38,6 +38,11 @@
 	</div>
 </div>
 <h1>Equipos</h1><br>
+<?php
+if($this->session->userdata('logueado')) {
+	echo '<p ><a href = "'.base_url().'index.php/equipos/AnadirEquipo" >Añadir Equipo</a ></p >';
+}
+?>
 <div class="table-responsive container">
 	<table class="table">
 		<thead>
@@ -45,6 +50,8 @@
 			<th scope="col" class='text-center'>Nombre</th>
 			<th scope="col" class='text-center'>Número de Jugadores</th>
 			<th scope="col" class='text-center'>Máximo de Jugadores</th>
+			<th scope="col" class='text-center'></th>
+			<th scope="col" class='text-center'></th>
 			<th scope="col" class='text-center'></th>
 		</tr>
 		</thead>
@@ -54,7 +61,15 @@
 			echo '<td class="text-center">'.$row->nombre.'</td>';
 			echo "<td class='text-center'>".$row->numJugadores."</td>";
 			echo "<td class='text-center'>".$row->maxJugadores."</td>";
-			echo '<td><a href="'.base_url().'index.php/equipos/unirse?i='.$row->idEquipo.'"><i class="fas fa-user-plus"></i></a></td>';
+			if($this->session->userdata('id')==$row->idCreadorEquipo){
+				echo '<td><a href="'.base_url().'index.php/equipos/editarEquipo?i='.$row->idEquipo.'&n='.$row->nombre.'&m='.$row->maxJugadores.'"><abbr title="EDITAR"><i class="fas fa-edit"></i></abbr></a></td>';
+			}
+			if($this->session->userdata('id')==$row->idCreadorEquipo){
+				echo '<td><a href="'.base_url().'index.php/equipos/eliminarEquipo?i='.$row->idEquipo.'"><abbr title="ELIMINAR"><i class="fas fa-trash"></i></abbr></a></td>';
+			}
+			if($this->session->userdata('id')!=$row->idCreadorEquipo){
+				echo '<td><a href="'.base_url().'index.php/equipos/salirse?i='.$row->idEquipo.'"><abbr title="SALIRSE"><i class="fas fa-user-minus"></i></abbr></a></td>';
+			}
 			echo '</tr>';
 		}?>
 		</tbody>
