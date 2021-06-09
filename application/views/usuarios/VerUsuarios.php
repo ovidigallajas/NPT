@@ -45,7 +45,7 @@
 			echo "<td>".$row->nombre."</td>";
 			echo "<td>".$row->correo."</td>";
 			echo "<td>".$row->edad."</td>";
-			echo '<td><a href="'.base_url().'index.php/usuarios/eliminarUsuarios?id='.$row->idUsuario.'">Eliminar</a></td>
+			echo '<td><a href="'.base_url().'index.php/usuarios/eliminarUsuarios?id='.$row->idUsuario.'"><abbr title="ELIMINAR"><i class="fas fa-trash"></i></abbr></a></td>
 			</tr>';
 		}?>
 		</tbody>

@@ -2,6 +2,7 @@
 class equipos_model extends CI_Model {
 	public function __construct() {
 		parent::__construct();
+		$this->db = $this->load->database('npt',TRUE);
 	}
 
 	/**
@@ -27,6 +28,17 @@ class equipos_model extends CI_Model {
 		$this->db->where('idUsuarioJugador',$id);
 		$query = $this->db->get();
 		return $query;
+	}
+
+	public function equipos_validos($id,$jugadores){
+		return $this->db->query("SELECT * FROM equipos WHERE idCreadorEquipo='".$id."' AND maxJugadores=numJugadores AND maxJugadores='".$jugadores."'");
+		/*$this->db->select('*');
+		$this->db->from('equipos');
+		$this->db->where('idCreadorEquipo',$id);
+		$this->db->where('maxJugadores','numJugadores');
+		$this->db->where('maxJugadores',$jugadores);
+		$query = $this->db->get();
+		return $query;*/
 	}
 
 	/**

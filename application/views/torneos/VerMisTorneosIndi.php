@@ -25,6 +25,7 @@
 		p{
 			font-size: 20px;
 			text-align: center;
+			color:red;
 		}
 		i{
 			font-size: 2em;

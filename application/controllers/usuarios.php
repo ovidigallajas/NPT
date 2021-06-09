@@ -11,6 +11,7 @@ class usuarios extends CI_Controller {
 	 */
 	public function __construct() {
 		parent::__construct();
+		$this->load->helper('cookie');
 	}
 
 	/**
@@ -43,19 +44,30 @@ class usuarios extends CI_Controller {
 				/**
 				 * Comprueba el usuario y la contraseña y si son correctos crea las variables de sesión
 				 */
-				$usuario = $this->usuario_model->usuario_por_nick_password($nick, $password);
-				if ($usuario) {
-					$usuario_data = array(
-						'id' => $usuario->idUsuario,
-						'nick' => $usuario->nick,
-						'perfil' => $usuario->perfil,
-						'organizador' => $usuario->organizador,
-						'logueado' => TRUE
-					);
-					$this->session->set_userdata($usuario_data);
-					redirect('index.php/usuarios/logueado');
+				$usuario = $this->usuario_model->usuario_por_nick_password($nick);
+				if(password_verify($password,$usuario->password)) {
+					if ($usuario) {
+						$usuario_data = array(
+							'id' => $usuario->idUsuario,
+							'nick' => $usuario->nick,
+							'perfil' => $usuario->perfil,
+							'organizador' => $usuario->organizador,
+							'logueado' => TRUE
+						);
+						$this->session->set_userdata($usuario_data);
+						/*$cookie = array(
+							'name'   => 'logins',
+							'value'  => 'value'+1,
+							'expire' => '300',
+							'secure' => TRUE
+						);
+						$this->input->set_cookie($cookie);*/
+						redirect('index.php/usuarios/logueado');
+					} else {
+						$datos["mensaje"] = "El usuario o la contraseña son incorrectos";
+					}
 				}else{
-					$datos["mensaje"]="El usuario o la contraseña son incorrectos";
+					$datos["mensaje"] = "El usuario o la contraseña son incorrectos";
 				}
 			}else{
 				$datos["mensaje"]="";
@@ -149,7 +161,9 @@ class usuarios extends CI_Controller {
 					}
 				}
 			}else{
+				$this->load->model('usuario_model');
 				$datos["mensaje"]="";
+				$datos['usuarios'] = $this->usuario_model->ver_cuenta($this->session->userdata('id'));
 				$this->load->view('usuarios/ver_cuenta',$datos);
 			}
 			//redirect('index.php/usuarios/verCuentas');
@@ -189,7 +203,7 @@ class usuarios extends CI_Controller {
 				$nick = $this->input->post('nick');
 				$nombre = $this->input->post('nombre');
 				$correo = $this->input->post('correo');
-				$password = $this->input->post('password');
+				$password = password_hash($this->input->post('password'),PASSWORD_DEFAULT);
 				$edad = $this->input->post('edad');
 				$this->load->model('usuario_model');
 				/**
@@ -304,13 +318,20 @@ class usuarios extends CI_Controller {
 			foreach ($contrasena as $indice => $row){
 				$this->email->message('Estmado '.$nombre.',<br/>
  				Desde NPT le informamos que hemos recibido una solicitud de recuperación de tu contraseña. <br>
- 				Su contraseña es: ' .$row);
+ 				Su contraseña es: ' .password_verify($row,PASSWORD_DEFAULT));
 			}
 			$this->email->send();
 			redirect('index.php/usuarios/iniciar_sesion');
 		} else {
 			$this->iniciar_sesion();
 		}
+	}
+
+	/**
+	 * Muestra la página de Avisos Legales
+	 */
+	public function AvisosLegales(){
+		$this->load->view('templates/avisoslegales');
 	}
 
 	/**

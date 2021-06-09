@@ -33,9 +33,11 @@ class torneos extends CI_Controller
 	public function verTorneosEquipos($mensaje="")
 	{
 		$this->load->model('torneos_model');
+		//$this->load->model('equipos_model');
 		$data = array();
 		$data['mensaje']=$mensaje;
 		$data['torneose'] = $this->torneos_model->ver_torneos_equipo();
+		//$data['equipos'] = $this->torneos_model->equipos_validos($this->session->userdata('id'));
 		$this->load->view('torneos/verTorneosEquipos', $data);
 	}
 
@@ -74,6 +76,44 @@ class torneos extends CI_Controller
 		$data['torneose'] = $this->torneos_model->ver_mis_torneos_equipo($this->session->userdata('id'));
 		$data['mensaje'] = $mensaje;
 		$this->load->view('torneos/Organizador', $data);
+	}
+
+	public function participantes(){
+		$torneo = $this->input->get('i');
+		$this->load->model('torneos_model');
+		$data = array();
+		$data['jugadores'] = $this->torneos_model->ver_participantes($torneo);
+		$data['torneo']=$torneo;
+		$this->load->view('torneos/Participantes', $data);
+	}
+
+	public function ganador_post(){
+		$this->form_validation->set_rules('ganador', 'Ganador', 'required');
+		if ($this->form_validation->run() != false) {
+			$this->load->model('torneos_model');
+			$idGanador=$this->input->post('ganador');
+			$idTorneo=$this->input->post('torneo');
+			$data = array();
+		/*	if($this->torneos_model->comprobar_ganador($idTorneo)>0){
+				$this->torneos_model->eliminar_ganador($idTorneo);*/
+				if($this->torneos_model->ganador($idTorneo,$idGanador)){
+					//$datos["confirmacion"] = "Ganador establecido con éxito";
+					Redirect('index.php/torneos/OrganizarTorneos');
+				}else{
+					$data["mensaje"] = "Ganador establecido con éxito";
+					$this->load->view('torneos/Participantes', $data);
+				}
+		/*	}else{
+				if($this->torneos_model->ganador($idTorneo,$idGanador)){
+					//$datos["confirmacion"] = "Ganador establecido con éxito";
+					Redirect('index.php/torneos/OrganizarTorneos');
+				}else{
+					$data["mensaje"] = "Ganador establecido con éxito";
+					$this->load->view('torneos/Participantes', $data);
+				}
+			}*/
+
+		}
 	}
 
 	/**
@@ -298,11 +338,36 @@ class torneos extends CI_Controller
 		$this->load->model('torneos_model');
 		$data = array();
 		$id=$this->session->userdata('id');
-		if($this->torneos_model->inscribirse($this->input->get('i'),$id)){
+		if(!$this->torneos_model->inscribirse($this->input->get('i'),$id)){
 			$data['mensaje']="No se ha inscrito correctamente";
+			$data['torneosi'] = $this->torneos_model->ver_torneos_individuales($id);
+			$this->load->view('torneos/verTorneosIndividuales', $data);
+		}else {
+			$data['mistorneosi'] = $this->torneos_model->ver_torneos_individuales($id);
+			$this->load->view('torneos/verMisTorneosIndi', $data);
 		}
-		$data['torneosi'] = $this->torneos_model->ver_torneos_individuales($id);
-		$this->load->view('torneos/verTorneosIndividuales', $data);
+	}
+
+	public function inscribir_equipo(){
+		$torneo = $this->input->get('i');
+		$jugadores = $this->input->get('j');
+		$this->load->model('equipos_model');
+		$data = array();
+		$data['equipos'] = $this->equipos_model->equipos_validos($this->session->userdata('id'),$jugadores);
+		//$data['equipos'] = $this->equipos_model->equipos_validos($this->session->userdata('id'));
+		$data['torneo']=$torneo;
+		$this->load->view('torneos/EquiposInscribir', $data);
+	}
+
+	public function inscribir_equipo_post(){
+		$torneo = $this->input->post('torneo');
+		$equipo = $this->input->post('equipo');
+		$this->load->model('torneos_model');
+		if($this->torneos_model->inscribir_equipo($torneo,$equipo)){
+			Redirect('index.php/torneos/verMisTorneosEquipo');
+		}else{
+			Redirect('index.php/torneos/inscribir_equipo');
+		}
 	}
 
 	/**
@@ -312,14 +377,14 @@ class torneos extends CI_Controller
 		$this->load->model('torneos_model');
 		$data = array();
 		$id=$this->session->userdata('id');
-		if($this->torneos_model->desinscribirse($this->input->get('i'),$id)){
-			$data['mensaje']="No se ha inscrito correctamente";
+		if(!$this->torneos_model->desinscribirse($this->input->get('i'),$id)){
+			$data['mensaje']="No se ha desinscribido correctamente";
+			$data['mistorneosi'] = $this->torneos_model->ver_toneos_inscrito_indi($id);
+			$this->load->view('torneos/verMisTorneosIndi', $data);
+		}else {
+			$data['mistorneosi'] = $this->torneos_model->ver_toneos_inscrito_indi($id);
+			$this->load->view('torneos/verMisTorneosIndi', $data);
 		}
-		$data['torneosi'] = $this->torneos_model->ver_torneos_individuales($id);
-		$data['torneose'] = $this->torneos_model->ver_torneos_equipo();
-		$data['mistorneosi'] = $this->torneos_model->ver_toneos_inscrito_indi($id);
-		$data['mistorneose'] = $this->torneos_model->ver_toneos_inscrito_equipo($id);
-		$this->load->view('torneos/verTorneos', $data);
 	}
 
 	/**

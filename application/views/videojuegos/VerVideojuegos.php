@@ -40,7 +40,7 @@
 <h1>Videojuegos</h1><br>
 <?php
 if($this->session->userdata('perfil')=='a') {
-	echo '<p ><a href = "'.base_url().'index.php/videojuegos/AnadirVideojuego" > Añadir</a ></p >';
+	echo '<p ><a href = "'.base_url().'index.php/videojuegos/AnadirVideojuego" style="font-size:1.5em"><abbr title="AÑADIR"><i class="fas fa-plus"></i></abbr></a ></p >';
 }
 ?>
 <div class="container-fluid">
@@ -66,10 +66,10 @@ if($this->session->userdata('perfil')=='a') {
 			echo "<td class='text-center'>".$row->descripcion."</td>";
 			echo "<td class='text-center'>".$row->edadMinima."</td>";
 			if($this->session->userdata('perfil')=='a'){
-				echo '<td><a href="'.base_url().'index.php/videojuegos/editarVideojuego?id='.$row->idJuego.'&n='.$row->nombre.'&d='.$row->descripcion.'&e='.$row->edadMinima.'&t='.$row->tipo.'">Editar</a></td>';
+				echo '<td><a href="'.base_url().'index.php/videojuegos/editarVideojuego?id='.$row->idJuego.'&n='.$row->nombre.'&d='.$row->descripcion.'&e='.$row->edadMinima.'&t='.$row->tipo.'"><abbr title="EDITAR"><i class="fas fa-edit"></i></abbr></a></td>';
 			}
 			if($this->session->userdata('perfil')=='a'){
-				echo '<td><a href="'.base_url().'index.php/videojuegos/eliminarVideojuego?id='.$row->idJuego.'&i='.$row->imagenJuego.'">Eliminar</a></td>';
+				echo '<td><a href="'.base_url().'index.php/videojuegos/eliminarVideojuego?id='.$row->idJuego.'&i='.$row->imagenJuego.'"><abbr title="ELIMINAR"><i class="fas fa-trash"></i></abbr></a></td>';
 			}
 			echo '</tr>';
 		}?>

@@ -40,7 +40,7 @@
 <h1>Equipos</h1><br>
 <?php
 if($this->session->userdata('logueado')) {
-	echo '<p ><a href = "'.base_url().'index.php/equipos/AnadirEquipo" >Añadir Equipo</a ></p >';
+	echo '<p ><a href = "'.base_url().'index.php/equipos/AnadirEquipo" style="font-size:1.5em"><abbr title="AÑADIR"><i class="fas fa-plus"></i></abbr></a ></p >';
 }
 ?>
 <div class="table-responsive container">

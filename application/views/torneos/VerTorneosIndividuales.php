@@ -25,6 +25,7 @@
 		p{
 			font-size: 20px;
 			text-align: center;
+			color:red;
 		}
 		i{
 			font-size: 2em;
@@ -67,7 +68,7 @@
 				echo "<td class='text-center'>".$row->nombre."</td>";
 				echo '<td scope="row" class="imagen"><img src="'.base_url().'recursos/imagenes/'.$row->imagenJuego.'" alt="'.$row->nombre.'"></td>';
 				echo "<td class='text-center'>".$row->nombrePlataforma."</td>";
-				echo "<td class='text-center'>".$row->fechaInicio."</td>";
+				echo "<td class='text-center' id='fechaInicio'>".$row->fechaInicio."</td>";
 				echo "<td class='text-center'>".$row->fechaFin."</td>";
 				echo "<td class='text-center'>".$row->inscritos."</td>";
 				echo "<td class='text-center'>".$row->maxJugadores."</td>";

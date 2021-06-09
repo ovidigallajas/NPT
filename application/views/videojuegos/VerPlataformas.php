@@ -40,7 +40,7 @@
 <h1>Plataformas</h1><br>
 <?php
 if($this->session->userdata('perfil')=='a') {
-	echo '<p ><a href = "'.base_url().'index.php/videojuegos/AnadirPlataforma" > Añadir</a ></p >';
+	echo '<p ><a href = "'.base_url().'index.php/videojuegos/AnadirPlataforma" style="font-size:1.5em"><abbr title="AÑADIR"><i class="fas fa-plus"></i></abbr></a ></p >';
 }
 ?>
 <div class="table-responsive container">
@@ -59,10 +59,10 @@ if($this->session->userdata('perfil')=='a') {
 			echo '<td scope="row" class="imagen"><img src="'.base_url().'recursos/imagenes/'.$row->imagenPlataforma.'" alt="plataforma"></td>';
 			echo "<td class='text-center'>".$row->nombre."</td>";
 			if($this->session->userdata('perfil')=='a'){
-				echo '<td><a href="'.base_url().'index.php/videojuegos/editarPlataforma?id='.$row->idPlataforma.'&i='.$row->imagenPlataforma.'&n='.$row->nombre.'">Editar</a></td>';
+				echo '<td><a href="'.base_url().'index.php/videojuegos/editarPlataforma?id='.$row->idPlataforma.'&i='.$row->imagenPlataforma.'&n='.$row->nombre.'" style="font-size:1.3em"><abbr title="EDITAR"><i class="fas fa-edit"></i></abbr></a></td>';
 			}
 			if($this->session->userdata('perfil')=='a'){
-				echo '<td><a href="'.base_url().'index.php/videojuegos/eliminarPlataformas?id='.$row->idPlataforma.'&i='.$row->imagenPlataforma.'">Eliminar</a></td>';
+				echo '<td><a href="'.base_url().'index.php/videojuegos/eliminarPlataformas?id='.$row->idPlataforma.'&i='.$row->imagenPlataforma.'" style="font-size:1.3em"><abbr title="ELIMINAR"><i class="fas fa-trash"></i></abbr></a></td>';
 			}
 			echo '</tr>';
 		}?>

@@ -14,10 +14,6 @@
 			text-decoration: none !important;
 			font-weight: bold;
 		}
-		.imagen{
-			width:300px;
-			height: 100px;
-		}
 		img{
 			width: 100%;
 			height: auto;

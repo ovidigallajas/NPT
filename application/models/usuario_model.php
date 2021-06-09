@@ -3,6 +3,7 @@ class usuario_model extends CI_Model {
 	public function __construct()
 	{
 		parent::__construct();
+		$this->db = $this->load->database('npt',TRUE);
 	}
 
 	/**
@@ -11,12 +12,10 @@ class usuario_model extends CI_Model {
 	 * @param $password string
 	 * @return mixed
 	 */
-	public function usuario_por_nick_password($nick, $password){
-		$this->db->select('idUsuario, nick, password, perfil, organizador');
+	public function usuario_por_nick_password($nick){
+		$this->db->select('idUsuario, nick, password, perfil');
 		$this->db->from('usuarios');
-		$this->db->join('jugadores','usuarios.idUsuario = jugadores.idUsuarioJugador');
 		$this->db->where('nick', $nick);
-		$this->db->where('password', $password);
 		$consulta = $this->db->get();
 		$resultado = $consulta->row();
 		return $resultado;

@@ -2,6 +2,7 @@
 class torneos_model extends CI_Model {
 	public function __construct() {
 		parent::__construct();
+		$this->db = $this->load->database('npt',TRUE);
 	}
 
 	/**
@@ -64,9 +65,10 @@ class torneos_model extends CI_Model {
 		$this->db->join('juegotorneo jt', 't.idTorneo = jt.idTorneo');
 		$this->db->join('juegos j', 'jt.idJuego = j.idJuego');
 		$this->db->join('plataformas p', 'jt.idPlataforma = p.idPlataforma');
-		$this->db->join('inscripcionjugadores i', 'i.idTorneo = t.idTorneo');
-		$this->db->where('i.idUsuarioJugador',$id);
-		$this->db->where('maxJugadores',null);
+		$this->db->join('inscripcionequipo i', 'i.idTorneo = t.idTorneo');
+		$this->db->join('equipos e', 'e.idEquipo = i.idEquipo');
+		$this->db->where('e.idCreadorEquipo',$id);
+		$this->db->where('t.maxJugadores',null);
 		$query = $this->db->get();
 		return $query;
 	}
@@ -185,19 +187,72 @@ class torneos_model extends CI_Model {
 	 */
 	public function inscribirse($torneo,$id)
 	{
-		$data = array(
-			'idTorneo' => $torneo,
-			'idUsuarioJugador' => $id,
-		);
-		$this->db->insert('inscripcionjugadores', $data);
+		$hoy= date('yyyy-MM-dd');
+		$this->db->select('*');
+		$this->db->from('torneos');
+		$this->db->where('inscritos !=','maxJugadores');
+		$this->db->where('fechaInicio >',$hoy);
+		$this->db->where('idTorneo',$torneo);
+		$query=$this->db->get();
+		if($query->num_rows()>0) {
+			return false;
+		}else{
+			$data = array(
+				'idTorneo' => $torneo,
+				'idUsuarioJugador' => $id,
+			);
+			$this->db->insert('inscripcionjugadores', $data);
 
-		/*$this->db->where('idTorneo', $id);
-		$this->db->set('inscritos','inscritos'+1);
-		return $this->db->update('torneos');*/
+			/*$this->db->where('idTorneo', $id);
+			$this->db->set('inscritos','inscritos'+1);
+			return $this->db->update('torneos');*/
 
-		return $this->db->query("UPDATE torneos SET inscritos=inscritos+1 WHERE idTorneo='".$torneo."'");
+			return $this->db->query("UPDATE torneos SET inscritos=inscritos+1 WHERE idTorneo='" . $torneo . "'");
+		}
 	}
 
+	public function inscribir_equipo($torneo,$equipo){
+		return $this->db->insert('inscripcionequipo',array('idTorneo'=>$torneo,'idEquipo'=>$equipo));
+	}
+
+	/**
+	 * Saca los participantes de un torneo
+	 * @param $id integer
+	 * @return mixed
+	 */
+    public function ver_participantes($id){
+		$this->db->select('t.*,j.*,u.*');
+		$this->db->from('torneos t');
+		//$this->db->join('partidas p', 'p.idTorneo = t.idTorneo');
+		$this->db->join('inscripcionjugadores j', 'j.idTorneo = t.idTorneo');
+		$this->db->join('usuarios u', 'u.idUsuario = j.idUsuarioJugador');
+		$this->db->where('t.idTorneo',$id);
+		$query = $this->db->get();
+		return $query;
+	}
+	/*public function comprobar_ganador($id){
+		$this->db->select('t.*,p.*');
+		$this->db->from('torneos t');
+		$this->db->join('partidas p', 'p.idTorneo = t.idTorneo');
+		$this->db->where('t.idTorneo',$id);
+		$query = $this->db->get();
+		return $query->num_rows();
+	}
+
+	public function eliminar_ganador($id){
+		return $this->db->delete('partidas',array('idTorneo'=>$id));
+	}*/
+
+	public function ganador($torneo,$ganador){
+    	return $this->db->insert('partidas',array('idTorneo'=>$torneo,'Ganador'=>$ganador));
+	}
+
+	/**
+	 * Desinscribirse de un torneo
+	 * @param $torneo integer
+	 * @param $id integer
+	 * @return mixed
+	 */
 	public function desinscribirse($torneo,$id)
 	{
 		$this->db->delete('inscripcionjugadores', $data=array('idTorneo' => $torneo,'idUsuarioJugador' => $id));

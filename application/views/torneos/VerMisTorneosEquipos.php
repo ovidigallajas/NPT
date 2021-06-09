@@ -25,6 +25,7 @@
 		p{
 			font-size: 20px;
 			text-align: center;
+			color:red;
 		}
 		i{
 			font-size: 2em;
@@ -70,7 +71,7 @@ echo '<br><h1>Torneos Inscritos</h1><br>
 					echo "<td class='text-center'>".$row->fechaInicio."</td>";
 					echo "<td class='text-center'>".$row->fechaFin."</td>";
 					echo "<td class='text-center'>".$row->inscritos."</td>";
-					echo "<td class='text-center'>".$row->maxJugadores."</td>";
+					echo "<td class='text-center'>".$row->numMaxJugadoresEquipo."</td>";
 					echo "<td class='text-center'>".$row->precioInscripcion."€</td>";
 					echo "<td class='text-center'>".$row->premio."€</td>";
 					echo '</tr>';

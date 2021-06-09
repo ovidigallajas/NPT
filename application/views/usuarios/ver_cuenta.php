@@ -2,22 +2,14 @@
 <html>
 <head>
 	<title> Plataformas </title>
+	<link rel="stylesheet" href="<?= base_url() ?>recursos/css/index.css" type="text/css">
 	<style>
 		p > a{
 			text-align: center;
 		}
-		a{
-			text-decoration: none !important;
-			font-weight: bold;
-			font-size: 20px;
-		}
 		h1{
 			font-family:Courier New !important;
 			text-align: center;
-		}
-		p{
-			color: red ;
-			width:500px ;
 		}
 	</style>
 </head>
@@ -53,14 +45,14 @@
 					</tr>
 				</tbody>
 			</table>
-			<div class="padding-left">
+			<div class="padding-left error">
 				<p><?php if(isset($mensaje)) echo $mensaje; ?></p>
 				<?=validation_errors();?>
 			</div>
 			<div class="padding-left">
 				<span>¿Cansado de tu cuenta? Puedes darte de baja <a href="<?php echo base_url() ?>index.php/usuarios/eliminarUsuario">aquí</a></span>
-			</div>
-			<input type="submit" value="Editar" class="btn btn-default padding-left"/><br><br>
+			</div><br>
+			<input type="submit" value="Editar" class="btn btn-outline-primary margin-left"/><br><br>
 		</form>
 	</div>
 <?php $this->load->view('templates/footer')?>

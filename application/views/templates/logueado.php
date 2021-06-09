@@ -59,9 +59,17 @@
 				?>
 				<?php
 				if($this->session->userdata('logueado')){
-					echo '<li class="nav-item">';
-					echo '<a class="nav-link" href="'.base_url().'index.php/equipos/verEquipos">Equipos</a>';
-					echo '</li>';
+					echo'
+					<li class="nav-item dropdown">
+					<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						Equipos
+					</a>
+					<ul class="dropdown-menu" aria-labelledby="navbarDropdown">';
+					echo "<li><a class='dropdown-item' href='".base_url()."index.php/equipos/verMisEquipos' > Mis Equipos </a ></li >";
+					echo "<li><a class='dropdown-item' href='".base_url()."index.php/equipos/verEquipos' > Equipos </a ></li >";
+					echo'
+					</ul>
+					</li>';
 				}
 				?>
 				<li class="nav-item">
