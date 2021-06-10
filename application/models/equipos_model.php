@@ -114,6 +114,7 @@ class equipos_model extends CI_Model {
 	 * @param $id integer
 	 */
 	public function eliminar_equipo($id){
+		$this->db->delete('equipojugador', array('idEquipo' => $id));
 		$this->db->delete('equipos', array('idEquipo' => $id));
 	}
 

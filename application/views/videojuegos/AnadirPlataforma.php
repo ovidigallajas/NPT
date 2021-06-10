@@ -3,14 +3,6 @@
 <head>
 	<title> Plataformas </title>
 	<style>
-		p > a{
-			text-align: center;
-		}
-		a{
-			text-decoration: none !important;
-			font-weight: bold;
-			font-size: 20px;
-		}
 		#centrar{
 			width: 200px;
 			margin:0 auto;
@@ -18,10 +10,6 @@
 		h1{
 			font-family:Courier New !important;
 			text-align: center;
-		}
-		p{
-			color: red ;
-			width:500px ;
 		}
 	</style>
 </head>
@@ -43,9 +31,10 @@
 		<input type="file" name="userfile"/><br><br>
 		<input type="submit" value="Añadir">
 	</form><br>
-	<p><?php if(isset($mensaje)) echo $mensaje; ?></p>
-	<?=validation_errors();?><br>
-	<p><a href="<?php echo base_url() ?>index.php/videojuegos/VerPlataformas">Volver</a></p>
+	<div class="error">
+		<p><?php if(isset($mensaje)) echo $mensaje; ?></p>
+		<?=validation_errors();?><br>
+	</div>
 </div>
 <br>
 <?php $this->load->view('templates/footer') ?>

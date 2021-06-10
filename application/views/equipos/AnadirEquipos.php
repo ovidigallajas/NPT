@@ -45,7 +45,6 @@
 	</form><br>
 	<p><?php if(isset($mensaje)) echo $mensaje; ?></p>
 	<?=validation_errors();?><br>
-	<p><a href="<?php echo base_url() ?>index.php/equipos/verEquipos">Volver</a></p>
 </div>
 <br>
 <?php $this->load->view('templates/footer') ?>

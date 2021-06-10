@@ -15,6 +15,10 @@
 			text-decoration: none !important;
 			font-weight: bold;
 		}
+		#centrar{
+			width: 300px;
+			margin:0 auto;
+		}
 	</style>
 </head>
 <body>
@@ -26,8 +30,8 @@
 		</div>
 	</div>
 </div>
-<h1> Recuperar Contraseña </h1>
-<div id="formulario">
+<h1> Recuperar Contraseña </h1><br>
+<div id="centrar">
 <form method="post" action="<?php echo base_url() ?>index.php/usuarios/recuperarContrasena_post">
 	<label> Nombre </label>
 	<br />
@@ -37,9 +41,13 @@
 	<br />
 	<input type="text" name="correo" />
 	<br /><br/>
-	<input type="submit" value="Enviar" />
+	<div class="error">
+		<p><?php if(isset($mensaje)) echo $mensaje; ?></p>
+		<?=validation_errors();?>
+	</div>
+	<input type="submit" value="Enviar" /><br><br>
 </form>
-	<a href="<?php echo base_url() ?>index.php/usuarios/iniciar_sesion">Volver</a>
+	<a href="<?php echo base_url() ?>index.php/usuarios/iniciar_sesion">Volver</a><br><br>
 </div>
 <?php $this->load->view("templates/footer")?>
 </body>

@@ -3,14 +3,6 @@
 <head>
 	<title> Editar Equipo </title>
 	<style>
-		p > a{
-			text-align: center;
-		}
-		a{
-			text-decoration: none !important;
-			font-weight: bold;
-			font-size: 20px;
-		}
 		#centrar{
 			width: 200px;
 			margin:0 auto;
@@ -46,7 +38,6 @@
 	</form><br>
 	<p><?php if(isset($mensaje)) echo $mensaje; ?></p>
 	<?=validation_errors();?><br>
-	<p><a href="<?php echo base_url() ?>index.php/equipos/verEquipos">Volver</a></p>
 </div>
 <br>
 <?php $this->load->view('templates/footer') ?>

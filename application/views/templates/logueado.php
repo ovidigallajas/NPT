@@ -91,13 +91,13 @@
 </div>
 <div class="row">
 	<div class="col-lg-4 col-md-12 col-sm-12">
-		<button class="botones">Texto</button>
+		<button class="botones"><a href="https://es.egamersworld.com/counterstrike/match/navi-vs-faze-clan-kusTcxuHz5" target="_blank">NaVi<br>VS<br>FaZe Clan</a></button>
 	</div>
 	<div class="col-lg-4 col-md-12 col-sm-12">
-		<button class="botones">Texto</button>
+		<button class="botones"><a href="https://es.egamersworld.com/counterstrike/match/g2-esports-vs-big-gGcyXx2p_" target="_blank">G2 Esports<br>VS<br>BIG</a></button>
 	</div>
 	<div class="col-lg-4 col-md-12 col-sm-12">
-		<button class="botones">Texto</button>
+		<button class="botones"><a href="https://es.egamersworld.com/counterstrike/match/alternate-attax-vs-forze-fl23G3d8d" target="_blank">ALTERNATE aTTaX<br>VS<br>forZe</a></button>
 	</div>
 </div>
 <div class="titulo">

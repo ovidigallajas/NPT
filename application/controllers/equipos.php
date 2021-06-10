@@ -66,7 +66,7 @@ class equipos extends CI_Controller {
 				 * Crea el equipo
 				 */
 				if ($this->equipos_model->anadir_equipo($nombre,$maxJugadores,$this->session->userdata('id'))) {
-					Redirect("index.php/equipos/verEquipos");
+					Redirect("index.php/equipos/verMisEquipos");
 				} else {
 					$datos["mensaje"] = "No se ha añadido correctamente";
 					$this->load->view('equipos/AnadirEquipos', $datos);
@@ -119,15 +119,25 @@ class equipos extends CI_Controller {
 				 * Edita el equipo
 				 */
 				if ($this->equipos_model->editar_equipo($id,$nombre,$maxJugadores)) {
-					Redirect("index.php/equipos/verEquipos");
+					Redirect("index.php/equipos/verMisEquipos");
 				} else {
-					$datos["mensaje"] = "No se ha añadido correctamente";
-					$this->load->view('equipos/AnadirEquipos', $datos);
+					$datos = array(
+						'mensaje'=>'',
+						'nombre'=>$this->input->post('nombre'),
+						'idEquipo'=>$this->input->post('idEquipo'),
+						'maxJugadores'=>$this->input->post('maxJugadores')
+					);
+					$this->load->view('equipos/EditarEquipos', $datos);
 				}
 			}
 		}else{
-			$datos['mensaje']="";
-			$this->load->view('videojuegos/EditarPlataforma', $datos);
+			$datos = array(
+				'mensaje'=>'',
+				'nombre'=>$this->input->post('nombre'),
+				'idEquipo'=>$this->input->post('idEquipo'),
+				'maxJugadores'=>$this->input->post('maxJugadores')
+			);
+			$this->load->view('equipos/EditarEquipos', $datos);
 		}
 	}
 

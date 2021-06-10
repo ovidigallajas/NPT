@@ -27,6 +27,7 @@
 	</div>
 	<div>
 		<form method="post" action="<?php echo base_url() ?>index.php/usuarios/modificarCuentas">
+			<p class="correcto"><?php if(isset($mensajeCorrecto)) echo $mensajeCorrecto; ?></p>
 			<table class="table">
 				<thead>
 					<tr>

@@ -32,7 +32,6 @@
 <h1>Iniciar Sesión</h1>
 <div id="correcto">
 <p><?php if(isset($mensajeCorrecto)) echo $mensajeCorrecto; ?></p>
-<?=validation_errors();?>
 </div>
 <div id="formulario">
 	<form method="post" action="<?php echo base_url() ?>index.php/usuarios/iniciar_sesion_post">

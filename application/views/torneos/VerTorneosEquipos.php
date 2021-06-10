@@ -66,7 +66,7 @@
 			</thead>
 			<tbody>
 			<?php	foreach ($torneose->result() as $row) {
-				$fechaI=$row->fechaFin;
+				$fechaI=$row->fechaInicio;
 				$hoy = date('Y-m-d');
 				if($fechaI<$hoy) {
 					echo '<tr style="background-color: rgba(255,0,0,0.84)">';

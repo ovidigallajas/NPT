@@ -40,8 +40,11 @@ class usuario_model extends CI_Model {
 	 * @return mixed
 	 */
 	public function ver_usuarios(){
-		$query = $this->db->get('usuarios');
-		return $query;
+		$this->db->select('*');
+		$this->db->from('usuarios');
+		$this->db->where('perfil !=', 'a');
+		$consulta = $this->db->get();
+		return $consulta;
 	}
 
 	/**
@@ -85,7 +88,7 @@ class usuario_model extends CI_Model {
 		$id = $this->db->insert_id();
 		$data2 = array(
 			'idUsuarioJugador' => $id,
-			'organizador'   => false,
+			'organizador'   => true,
 		);
 		return $this->db->insert('jugadores',$data2);
 	}
@@ -95,6 +98,7 @@ class usuario_model extends CI_Model {
 	 * @param $id integer
 	 */
 	public function eliminar_usuario($id){
+		$this->db->delete('jugadores', array('idUsuarioJugador' => $id));
 		$this->db->delete('usuarios', array('idUsuario' => $id));
 	}
 
@@ -110,6 +114,12 @@ class usuario_model extends CI_Model {
 		$consulta = $this->db->get();
 		$resultado = $consulta->row();
 		return $resultado;
+	}
+
+	public function actualizarContrasena($correo,$contrasena){
+		$this->db->where('correo', $correo);
+		$this->db->set('password', $contrasena);
+		return $this->db->update('usuarios');
 	}
 
 	/**

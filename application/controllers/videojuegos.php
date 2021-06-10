@@ -304,8 +304,15 @@ class videojuegos extends CI_Controller {
 				$this->load->library('upload', $config);
 
 				if (!$this->upload->do_upload()) {
-					$datos["mensaje"] = "No se ha editado correctamente";
-					$this->load->view('videojuegos/EditarVideojuegos', $datos);
+					$data = array(
+						'mensaje'=> 'La imagen es obligatoria',
+						'nombre' => $this->input->post('nombre'),
+						'id'=>$this->input->post('id'),
+						'tipo'=>$this->input->post('tipo'),
+						'edad'=>$this->input->post('edad'),
+						'descripcion'=>$this->input->post('descripcion')
+					);
+					$this->load->view('videojuegos/EditarVideojuego', $data);
 				} else {
 					/**
 					 * Edita el videojuego
@@ -314,15 +321,29 @@ class videojuegos extends CI_Controller {
 					$datos["img"] = $this->upload->data();
 
 					if ($this->videojuegos_model->editar_videojuego($id, $nombre, $descripcion, $tipo, $edad, $datos["img"]["file_name"])) {
-						Redirect("index.php/videojuegos/verVideojuego");
+						Redirect("index.php/videojuegos/verVideojuegos");
 					} else {
-						$datos["mensaje"] = "No se ha editado correctamente";
-						$this->load->view('videojuegos/EditarVideojuego', $datos);
+						$data = array(
+							'mensaje'=> 'No se ha editado correctamente',
+							'nombre' => $this->input->post('nombre'),
+							'id'=>$this->input->post('id'),
+							'tipo'=>$this->input->post('tipo'),
+							'edad'=>$this->input->post('edad'),
+							'descripcion'=>$this->input->post('descripcion')
+						);
+						$this->load->view('videojuegos/EditarVideojuego', $data);
 					}
 				}
 			}
 		}else{
-			$datos['mensaje']="";
+			$datos = array(
+				'mensaje'=> '',
+				'nombre' => $this->input->post('nombre'),
+				'id'=>$this->input->post('id'),
+				'tipo'=>$this->input->post('tipo'),
+				'edad'=>$this->input->post('edad'),
+				'descripcion'=>$this->input->post('descripcion')
+			);
 			$this->load->view('videojuegos/EditarVideojuego', $datos);
 		}
 	}

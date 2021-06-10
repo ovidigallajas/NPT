@@ -5,7 +5,7 @@
 
 /* Tamaño de cada elemento del slider */
 .carousel-item{
-	height:600px;
+	max-height:600px;
 }
 
 /* Alinear el slider en el centro */
@@ -22,6 +22,10 @@
 	color:white;
 	border:1px solid black;
 }
+.botones a{
+	text-decoration: none;
+	color: white;
+}
 /* Div que contiene el slider de los juegos con más inscripciones */
 #juegos{
 	margin-top:100px;
@@ -33,7 +37,11 @@
 	margin-top:100px;
 	font-family:Courier New;
 }
-
+/*Mensaje de Procesos exitosos*/
+.correcto{
+	margin-left: 10%;
+	color:green;
+}
 /* Formulario de Inicio de Sesión y Registro */
 #formulario{
 	padding:100px;

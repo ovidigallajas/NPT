@@ -51,7 +51,7 @@ class usuarios extends CI_Controller {
 							'id' => $usuario->idUsuario,
 							'nick' => $usuario->nick,
 							'perfil' => $usuario->perfil,
-							'organizador' => $usuario->organizador,
+							'organizador' => TRUE,
 							'logueado' => TRUE
 						);
 						$this->session->set_userdata($usuario_data);
@@ -144,14 +144,14 @@ class usuarios extends CI_Controller {
 					/**
 					 * Comprueba si el email ya existe
 					 */
-					if($this->usuario_model->comprobarCorreo("",$correo)>0) {
+					if($this->usuario_model->comprobarCorreo($id,$correo)>0) {
 						$datos['usuarios'] = $this->usuario_model->ver_cuenta($id);
 						$datos["mensaje"] = "El correo introducido ya existe";
 						$this->load->view('usuarios/ver_cuenta',$datos);
 					}else {
 						if($this->usuario_model->editar_cuenta($id, $nick, $nombre, $correo, $edad)){
 							$datos['usuarios'] = $this->usuario_model->ver_cuenta($id);
-							$datos["mensaje"] = "Cambio realizado con éxito";
+							$datos["mensajeCorrecto"] = "Cambio realizado con éxito";
 							$this->load->view('usuarios/ver_cuenta',$datos);
 						}else{
 							$datos['usuarios'] = $this->usuario_model->ver_cuenta($id);
@@ -295,36 +295,66 @@ class usuarios extends CI_Controller {
 	 * Recoje los datos del formulario de recuperar contraseña y envía el correo con la contraseña al usuario
 	 */
 	public function recuperarContrasena_post(){
-		if ($this->input->post()) {
+		/**
+		 * Comprueba que estén todos los campos rellenos y que el email es válido
+		 */
+		$this->form_validation->set_rules('nombre', 'Nombre', 'required');
+		$this->form_validation->set_rules('correo', 'Correo', 'required|valid_email');
+		$this->form_validation->set_message('required','El campo %s es obligatorio');
+		$this->form_validation->set_message('valid_email','El correo no es valido');
+		if($this->form_validation->run()!=false) {
 			$correo = $this->input->post('correo');
 			$nombre = $this->input->post('nombre');
 			$this->load->model('usuario_model');
 			$contrasena=$this->usuario_model->recuperar_contrasena($correo);
-			$this->load->library('email');
-			$config['protocol']    = 'smtp';
-			$config['smtp_host']    = 'ssl://smtp.gmail.com';
-			$config['smtp_port']    = '465';
-			$config['smtp_timeout'] = '7';
-			$config['smtp_user']    = 'nonprofessionaltournaments@gmail.com';
-			$config['smtp_pass']    = 'marcosyoscar';
-			$config['charset']    = 'utf-8';
-			$config['newline']    = "\r\n";
-			$config['mailtype'] = 'html'; // or html
-			$config['validation'] = TRUE;
-			$this->email->initialize($config);
-			$this->email->to($correo);
-			$this->email->from('nonprofessionaltournaments@gmail.com','NPT');
-			$this->email->subject('Recuperación de contraseña');
-			foreach ($contrasena as $indice => $row){
-				$this->email->message('Estmado '.$nombre.',<br/>
+			if($contrasena!="") {
+				$this->load->library('email');
+				$config['protocol'] = 'smtp';
+				$config['smtp_host'] = 'ssl://smtp.gmail.com';
+				$config['smtp_port'] = '465';
+				$config['smtp_timeout'] = '7';
+				$config['smtp_user'] = 'nonprofessionaltournaments@gmail.com';
+				$config['smtp_pass'] = 'marcosyoscar';
+				$config['charset'] = 'utf-8';
+				$config['newline'] = "\r\n";
+				$config['mailtype'] = 'html'; // or html
+				$config['validation'] = TRUE;
+				$this->email->initialize($config);
+				$this->email->to($correo);
+				$this->email->from('nonprofessionaltournaments@gmail.com', 'NPT');
+				$this->email->subject('Recuperación de contraseña');
+				$nuevaContrasena = $this->generarRandomString(10);
+				foreach ($contrasena as $indice => $row) {
+					$this->email->message('Estmado ' . $nombre . ',<br/>
  				Desde NPT le informamos que hemos recibido una solicitud de recuperación de tu contraseña. <br>
- 				Su contraseña es: ' .password_verify($row,PASSWORD_DEFAULT));
+ 				Su contraseña es: ' . $nuevaContrasena);
+				}
+				$this->load->model('usuario_model');
+				if($this->usuario_model->actualizarContrasena($correo,password_hash($nuevaContrasena,PASSWORD_DEFAULT))){
+					$this->email->send();
+					redirect('index.php/usuarios/iniciar_sesion');
+				}else{
+					$data['mensaje']="El correo no se ha enviado correctamente";
+					$this->load->view('usuarios/recuperarContrasena',$data);
+				}
+			}else{
+				$data['mensaje']="El correo introducido no está registrado";
+				$this->load->view('usuarios/recuperarContrasena',$data);
 			}
-			$this->email->send();
-			redirect('index.php/usuarios/iniciar_sesion');
 		} else {
-			$this->iniciar_sesion();
+			$data['mensaje']="";
+			$this->load->view('usuarios/recuperarContrasena',$data);
 		}
+	}
+
+	function generarRandomString($length) {
+		$characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890';
+		$charactersLength = strlen($characters);
+		$randomString = '';
+		for ($i = 0; $i < $length; $i++) {
+			$randomString .= $characters[rand(0, $charactersLength - 1)];
+		}
+		return $randomString;
 	}
 
 	/**
