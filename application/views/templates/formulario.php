@@ -45,7 +45,7 @@
 				</div>
 			</div>
 		</div>
-		<div id="formulario">
+		<div class="formulario">
 			<form role="form">
 				<div class="form-group">
 					<label for="email">Usuario:</label>

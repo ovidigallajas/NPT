@@ -43,7 +43,7 @@
 	color:green;
 }
 /* Formulario de Inicio de Sesión y Registro */
-#formulario{
+.formulario{
 	padding:100px;
 	width: 30%;
 }
@@ -213,6 +213,9 @@ footer p {
 }
 .centrar{
 	text-align: center;
+}
+.centrado{
+	margin: 0 auto ;
 }
 /*COOKIES*/
 #cajacookies {

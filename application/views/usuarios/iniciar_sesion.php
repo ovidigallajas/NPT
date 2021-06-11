@@ -7,9 +7,6 @@
 		#fallo{
 			color:red;
 		}
-		#correcto{
-			color:green;
-		}
 		h1{
 			margin-left: 100px;
 			font-family:Courier New;
@@ -29,11 +26,11 @@
 		</div>
 	</div>
 </div>
-<h1>Iniciar Sesión</h1>
-<div id="correcto">
+<h1>Iniciar Sesión</h1><br><br>
+<div class="correcto padding-left">
 <p><?php if(isset($mensajeCorrecto)) echo $mensajeCorrecto; ?></p>
 </div>
-<div id="formulario">
+<div class="formulario">
 	<form method="post" action="<?php echo base_url() ?>index.php/usuarios/iniciar_sesion_post">
 		<div class="form-group">
 			<label for="nick">Usuario: <span>*</span></label>

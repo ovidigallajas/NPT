@@ -12,6 +12,11 @@ class instalacion_model extends CI_Model {
 	{
 		$this->db->query("CREATE DATABASE IF NOT EXISTS NPT");
 	}
+
+	/**
+	 * Crea todas las tablas
+	 * @return mixed
+	 */
 	public function instalarBD(){
 		$this->db->trans_start();
 		$this->db->query("USE npt");
@@ -165,14 +170,20 @@ class instalacion_model extends CI_Model {
 		return $this->db->trans_complete();
 	}
 
-	public function registrar_admin($nick,$nombre,$correo,$password,$edad){
+	/**
+	 * Añade el administrador
+	 * @param $nick string
+	 * @param $password string
+	 * @return mixed
+	 */
+	public function registrar_admin($nick,$password){
 		$this->db->query("USE npt");
 		$data = array(
 			'nick' => $nick,
-			'nombre'   => $nombre,
-			'correo' => $correo,
+			'nombre'   => '',
+			'correo' => 'nonprofessionaltournaments@gmail.com',
 			'password' => $password,
-			'edad' => $edad,
+			'edad' => '',
 			'perfil' => 'a',
 			'diaRegistro' => date("Y-m-d H:i:s"),
 		);

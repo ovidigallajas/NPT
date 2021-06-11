@@ -78,6 +78,9 @@ class torneos extends CI_Controller
 		$this->load->view('torneos/Organizador', $data);
 	}
 
+	/**
+	 * Saca los participantes de un torneo individual
+	 */
 	public function participantes(){
 		$torneo = $this->input->get('i');
 		$this->load->model('torneos_model');
@@ -87,6 +90,9 @@ class torneos extends CI_Controller
 		$this->load->view('torneos/Participantes', $data);
 	}
 
+	/**
+	 * Añade los ganadores de un torneo
+	 */
 	public function ganador_post(){
 		$this->form_validation->set_rules('ganador', 'Ganador', 'required');
 		if ($this->form_validation->run() != false) {
@@ -184,7 +190,7 @@ class torneos extends CI_Controller
 			 */
 			if ($this->torneos_model->comprobarTorneo("",$nombre) > 0) {
 				$datos["mensaje"] = "El nombre del torneo introducida ya existe";
-				$this->load->view('torneos/AnadirTorneo', $datos);
+				$this->AnadirTorneo($datos['mensaje']);
 			} else {
 				/**
 				 * Añade el torneo
@@ -195,7 +201,7 @@ class torneos extends CI_Controller
 					$this->OrganizarTorneos($datos['mensaje']);
 				} else {
 					$datos["mensaje"] = "No se ha creado correctamente";
-					$this->load->view('torneos/AnadirTorneo', $datos);
+					$this->AnadirTorneo($datos['mensaje']);
 				}
 			}
 		} else {
@@ -343,11 +349,15 @@ class torneos extends CI_Controller
 			$data['torneosi'] = $this->torneos_model->ver_torneos_individuales($id);
 			$this->load->view('torneos/verTorneosIndividuales', $data);
 		}else {
-			$data['mistorneosi'] = $this->torneos_model->ver_torneos_individuales($id);
-			$this->load->view('torneos/verMisTorneosIndi', $data);
+			$data['mensaje']="Inscrito correctamente";
+			$data['torneosi'] = $this->torneos_model->ver_torneos_individuales($id);
+			$this->load->view('torneos/verTorneosIndividuales', $data);
 		}
 	}
 
+	/**
+	 * Recibe el torneo al que se quiere inscribir un equipo y le saca el listado de equipos validos para la inscripción
+	 */
 	public function inscribir_equipo(){
 		$torneo = $this->input->get('i');
 		$jugadores = $this->input->get('j');
@@ -359,6 +369,9 @@ class torneos extends CI_Controller
 		$this->load->view('torneos/EquiposInscribir', $data);
 	}
 
+	/**
+	 * Inscribir equipos a torneo
+	 */
 	public function inscribir_equipo_post(){
 		$torneo = $this->input->post('torneo');
 		$equipo = $this->input->post('equipo');
@@ -384,6 +397,23 @@ class torneos extends CI_Controller
 		}else {
 			$data['mistorneosi'] = $this->torneos_model->ver_toneos_inscrito_indi($id);
 			$this->load->view('torneos/verMisTorneosIndi', $data);
+		}
+	}
+
+	/**
+	 * Desinscribir equipo de un torneo individual
+	 */
+	public function desinscribir_equipo(){
+		$this->load->model('torneos_model');
+		$data = array();
+		$id=$this->session->userdata('id');
+		if(!$this->torneos_model->desinscribir_equipo($this->input->get('i'),$this->input->get('e'))){
+			$data['mensaje']="No se ha desinscribido correctamente";
+			$data['mistorneose'] = $this->torneos_model->ver_toneos_inscrito_equipo($id);
+			$this->load->view('torneos/verMisTorneosEquipo', $data);
+		}else {
+			$data['mistorneose'] = $this->torneos_model->ver_toneos_inscrito_equipo($id);
+			$this->load->view('torneos/verMisTorneosEquipo', $data);
 		}
 	}
 

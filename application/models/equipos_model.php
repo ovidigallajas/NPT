@@ -30,6 +30,12 @@ class equipos_model extends CI_Model {
 		return $query;
 	}
 
+	/**
+	 * Saca el listado de equipos validos para inscribirse a un torneo
+	 * @param $id integer
+	 * @param $jugadores string
+	 * @return mixed
+	 */
 	public function equipos_validos($id,$jugadores){
 		return $this->db->query("SELECT * FROM equipos WHERE idCreadorEquipo='".$id."' AND maxJugadores=numJugadores AND maxJugadores='".$jugadores."'");
 		/*$this->db->select('*');

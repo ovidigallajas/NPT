@@ -26,7 +26,7 @@
 	</div>
 </div>
 <h1>Registro</h1>
-<div id="formulario">
+<div class="formulario">
 	<form method="post" action="<?php echo base_url() ?>index.php/usuarios/registroUsuarios">
 		<div class="form-group">
 			<label> Usuario <span>*</span></label>

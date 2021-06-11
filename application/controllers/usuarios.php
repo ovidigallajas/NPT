@@ -14,6 +14,10 @@ class usuarios extends CI_Controller {
 		$this->load->helper('cookie');
 	}
 
+	public function home(){
+		$data = array();
+		$this->load->view('templates/home',$data);
+	}
 	/**
 	 * Carga el formulario de inicio de sesión
 	 */
@@ -44,25 +48,28 @@ class usuarios extends CI_Controller {
 				/**
 				 * Comprueba el usuario y la contraseña y si son correctos crea las variables de sesión
 				 */
-				$usuario = $this->usuario_model->usuario_por_nick_password($nick);
-				if(password_verify($password,$usuario->password)) {
-					if ($usuario) {
-						$usuario_data = array(
-							'id' => $usuario->idUsuario,
-							'nick' => $usuario->nick,
-							'perfil' => $usuario->perfil,
-							'organizador' => TRUE,
-							'logueado' => TRUE
-						);
-						$this->session->set_userdata($usuario_data);
-						/*$cookie = array(
-							'name'   => 'logins',
-							'value'  => 'value'+1,
-							'expire' => '300',
-							'secure' => TRUE
-						);
-						$this->input->set_cookie($cookie);*/
-						redirect('index.php/usuarios/logueado');
+				if($usuario = $this->usuario_model->usuario_por_nick_password($nick)) {
+					if (password_verify($password, $usuario->password)) {
+						if ($usuario) {
+							$usuario_data = array(
+								'id' => $usuario->idUsuario,
+								'nick' => $usuario->nick,
+								'perfil' => $usuario->perfil,
+								'organizador' => TRUE,
+								'logueado' => TRUE
+							);
+							$this->session->set_userdata($usuario_data);
+							/*$cookie = array(
+								'name'   => 'logins',
+								'value'  => 'value'+1,
+								'expire' => '300',
+								'secure' => TRUE
+							);
+							$this->input->set_cookie($cookie);*/
+							redirect('index.php/usuarios/logueado');
+						} else {
+							$datos["mensaje"] = "El usuario o la contraseña son incorrectos";
+						}
 					} else {
 						$datos["mensaje"] = "El usuario o la contraseña son incorrectos";
 					}
@@ -224,7 +231,7 @@ class usuarios extends CI_Controller {
 						 * Realiza el registro
 						 */
 						if ($this->usuario_model->registrar_usuario($nick, $nombre, $correo, $password, $edad)) {
-							$datos['mensaje'] = "Registro completado correctamente";
+							$datos['mensajeCorrecto'] = "Registro completado correctamente";
 							$this->load->view('usuarios/iniciar_sesion', $datos);
 						} else {
 							$datos["mensaje"] = "No se ha registrado correctamente";
@@ -347,6 +354,11 @@ class usuarios extends CI_Controller {
 		}
 	}
 
+	/**
+	 * Devuelve una cadena aleatoria para enviarla al correo de recuperación de contraseña
+	 * @param $length integer
+	 * @return string
+	 */
 	function generarRandomString($length) {
 		$characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890';
 		$charactersLength = strlen($characters);
@@ -355,6 +367,50 @@ class usuarios extends CI_Controller {
 			$randomString .= $characters[rand(0, $charactersLength - 1)];
 		}
 		return $randomString;
+	}
+
+	/**
+	 * Cambia la contraseña de un usuario
+	 */
+	public function cambiarContrasena()
+	{
+			/**
+			 * Comprueba si están todos los campos rellenos
+			 */
+			$this->form_validation->set_rules('password', 'Contraseña', 'required');
+			$this->form_validation->set_rules('password2', 'Repetir Contraseña', 'required');
+			$this->form_validation->set_message('required', 'El campo %s es obligatorio');
+			if ($this->form_validation->run() != false) {
+				/**
+				 * Recoge los datos enviados por post
+				 */
+				$datos["mensaje"] = "";
+				$password = $this->input->post('password');
+				$password2 = $this->input->post('password2');
+				$this->load->model('usuario_model');
+				/**
+				 * Comprueba si las contraseñas coinciden
+				 */
+				if ($password == $password2) {
+					if ($this->usuario_model->cambiarContrasena($this->session->userdata('id'), password_hash($password, PASSWORD_DEFAULT))) {
+						$datos["mensajeCorrecto"] = "Contraseña cambiada correctamente";
+						$datos['usuarios'] = $this->usuario_model->ver_cuenta($this->session->userdata('id'));
+					} else {
+						$datos["mensajePW"] = "No se ha cambiado la contraseña correctamente";
+						$datos['usuarios'] = $this->usuario_model->ver_cuenta($this->session->userdata('id'));
+					}
+				} else {
+					$datos["mensajePW"] = "Las contraseñas no coinciden";
+					$datos['usuarios'] = $this->usuario_model->ver_cuenta($this->session->userdata('id'));
+				}
+				$this->load->view("usuarios/ver_cuenta", $datos);
+			}else{
+				$this->load->model('usuario_model');
+				$datos["mensajePW"] = "";
+				$datos['usuarios'] = $this->usuario_model->ver_cuenta($this->session->userdata('id'));
+				$this->load->view("usuarios/ver_cuenta", $datos);
+			}
+
 	}
 
 	/**

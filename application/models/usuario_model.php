@@ -116,9 +116,27 @@ class usuario_model extends CI_Model {
 		return $resultado;
 	}
 
+	/**
+	 * Actualiza a la nueva contraseña cuando el usuario la recupera
+	 * @param $correo string
+	 * @param $contrasena string
+	 * @return mixed
+	 */
 	public function actualizarContrasena($correo,$contrasena){
 		$this->db->where('correo', $correo);
 		$this->db->set('password', $contrasena);
+		return $this->db->update('usuarios');
+	}
+
+	/**
+	 * Cambia la contraseña de un usuario
+	 * @param $id integer
+	 * @param $password string
+	 * @return mixed
+	 */
+	public function cambiarContrasena($id,$password){
+		$this->db->where('idUsuario', $id);
+		$this->db->set('password', $password);
 		return $this->db->update('usuarios');
 	}
 

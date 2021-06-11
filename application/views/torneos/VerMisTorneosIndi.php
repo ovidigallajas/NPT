@@ -65,17 +65,34 @@ echo '<br><h1>Torneos Inscritos</h1><br>
 				</thead>
 				<tbody>';
 				foreach ($mistorneosi->result() as $row){
-					echo '<tr>';
+					$fechaI=$row->fechaInicio;
+					$fechaF=$row->fechaFin;
+					$hoy = date('Y-m-d');
+					if($fechaI<=$hoy && $fechaF>=$hoy) {
+						echo '<tr style="background-color: lightgreen">';
+					}else{
+						if($hoy>$fechaF){
+							echo '<tr style="background-color: rgba(255,0,0,0.84)">';
+						}else {
+							echo '<tr>';
+						}
+					}
 					echo "<td class='text-center'>".$row->nombre."</td>";
 					echo '<td scope="row" class="imagen"><img src="'.base_url().'recursos/imagenes/'.$row->imagenJuego.'" alt="'.$row->nombre.'"></td>';
 					echo "<td class='text-center'>".$row->nombrePlataforma."</td>";
-					echo "<td class='text-center'>".$row->fechaInicio."</td>";
-					echo "<td class='text-center'>".$row->fechaFin."</td>";
+					echo "<td class='text-center'>".$fechaI."</td>";
+					echo "<td class='text-center'>".$fechaF."</td>";
 					echo "<td class='text-center'>".$row->inscritos."</td>";
 					echo "<td class='text-center'>".$row->maxJugadores."</td>";
 					echo "<td class='text-center'>".$row->precioInscripcion."€</td>";
 					echo "<td class='text-center'>".$row->premio."€</td>";
-					echo '<td class="text-center"><a href="' . base_url() . 'index.php/torneos/desinscribirse?i=' . $row->idTorneo . '"><i class="fas fa-user-minus"></i></a></td>';
+					if($fechaI<=$hoy && $fechaF>=$hoy) {
+					}else {
+						if ($fechaF < $hoy) {
+						} else {
+							echo '<td class="text-center"><a href="' . base_url() . 'index.php/torneos/desinscribirse?i=' . $row->idTorneo . '"><i class="fas fa-user-minus"></i></a></td>';
+						}
+					}
 					echo '</tr>';
 				}echo'
 				</tbody>

@@ -60,20 +60,41 @@ echo '<br><h1>Torneos Inscritos</h1><br>
 					<th scope="col" class="text-center">Máximo de Jugadores Por Equipo</th>
 					<th scope="col" class="text-center">Precio Inscripción</th>
 					<th scope="col" class="text-center">Premio</th>
+					<th scope="col" class="text-center"></th>
 				</tr>
 				</thead>
 				<tbody>';
 					foreach ($mistorneose->result() as $row){
-					echo '<tr>';
-					echo "<td class='text-center'>".$row->nombre."</td>";
+						$fechaI=$row->fechaInicio;
+						$fechaF=$row->fechaFin;
+						$hoy = date('Y-m-d');
+						if($fechaI<=$hoy && $fechaF>=$hoy) {
+							echo '<tr style="background-color: lightgreen">';
+						}else{
+							if($hoy>$fechaF){
+								echo '<tr style="background-color: rgba(255,0,0,0.84)">';
+							}else {
+								echo '<tr>';
+							}
+						}
+					echo "<td class='text-center'>".$row->nombreTorneo."</td>";
 					echo '<td scope="row" class="imagen"><img src="'.base_url().'recursos/imagenes/'.$row->imagenJuego.'" alt="'.$row->nombre.'"></td>';
 					echo "<td class='text-center'>".$row->nombrePlataforma."</td>";
-					echo "<td class='text-center'>".$row->fechaInicio."</td>";
-					echo "<td class='text-center'>".$row->fechaFin."</td>";
+					echo "<td class='text-center'>".$fechaI."</td>";
+					echo "<td class='text-center'>".$fechaF."</td>";
 					echo "<td class='text-center'>".$row->inscritos."</td>";
 					echo "<td class='text-center'>".$row->numMaxJugadoresEquipo."</td>";
 					echo "<td class='text-center'>".$row->precioInscripcion."€</td>";
 					echo "<td class='text-center'>".$row->premio."€</td>";
+						if($fechaI<=$hoy && $fechaF>=$hoy) {
+				}else {
+					if ($fechaF < $hoy) {
+					} else {
+						if ($row->idCreadorEquipo == $this->session->userdata('id')) {
+							echo '<td class="text-center"><a href="' . base_url() . 'index.php/torneos/desinscribir_equipo?i=' . $row->idTorneo . '&e=' . $row->idEquipo . '"><abbr title="DESINSCRIBIRSE"><i class="fas fa-minus-circle"></i></abbr></a></td>';
+						}
+					}
+				}
 					echo '</tr>';
 				}
 					echo'

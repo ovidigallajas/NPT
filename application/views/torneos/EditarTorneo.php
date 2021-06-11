@@ -26,7 +26,7 @@
 	</div>
 </div>
 <h1>Editar Torneo</h1>
-<div id="formulario">
+<div class="formulario">
 	<form action="<?php echo base_url() ?>index.php/torneos/editarTorneo_post" method="post" enctype="multipart/form-data">
 		<input type="hidden" name="idTorneo" value="<?php echo $idTorneo?>"/>
 		<div class="form-group">
@@ -67,12 +67,12 @@
 		<div class="form-group">
 			<label> Fecha Inicio <span>*</span></label>
 			<br />
-			<input type="text" class="form-control" id="datepicker" name="fechaInicio" value="<?php echo $fechaInicio?>">
+			<input type="text" placeholder="dd/MM/yyyy" onblur="validarFormatoFechaInicio()" class="form-control" id="datepicker" name="fechaInicio" value="<?php echo $fechaInicio?>">
 		</div>
 		<div class="form-group">
 			<label> Fecha Fin <span>*</span></label>
 			<br />
-			<input type="text" class="form-control" class="datepicker" name="fechaFin" value="<?php echo $fechaFin?>">
+			<input type="text" placeholder="dd/MM/yyyy" onblur="validarFormatoFechaFin()" class="form-control" class="datepicker" name="fechaFin" value="<?php echo $fechaFin?>">
 		</div>
 		<div class="form-group">
 			<label> Precio Inscripción <span>*</span></label>
@@ -88,9 +88,9 @@
 		<div class="form-check">
 			<?php
 				if($maxJugadores!=null){
-					echo '<input type="radio" onload="tipos()" class="form-check-input" name="tipoJugadores" value="Individual" checked/>';
+					echo '<input type="radio" onload="tipos()" class="form-check-input" name="tipoJugadores" value="Individual" checked disabled/>';
 				}else{
-					echo '<input type="radio" onload="tipos()" class="form-check-input" name="tipoJugadores" value="Individual"/>';
+					echo '<input type="radio" onload="tipos()" class="form-check-input" name="tipoJugadores" value="Individual" disabled/>';
 				}
 			?>
 			<label class="form-check-label" for="individual">Individual</label>
@@ -98,9 +98,9 @@
 		<div class="form-check">
 			<?php
 			if($maxJugadoresEquipos!=null){
-				echo '<input type="radio" onload="tipos()" class="form-check-input" name="tipoJugadores" value="Equipos" checked/>';
+				echo '<input type="radio" onload="tipos()" class="form-check-input" name="tipoJugadores" value="Equipos" checked disabled/>';
 			}else{
-				echo '<input type="radio" onload="tipos()" class="form-check-input" name="tipoJugadores" value="Equipos"/>';
+				echo '<input type="radio" onload="tipos()" class="form-check-input" name="tipoJugadores" value="Equipos" disabled/>';
 			}
 			?>
 			<label class="form-check-label" for="equipos">Equipos</label>
@@ -108,12 +108,25 @@
 		<div class="form-group" id="Jugadores">
 			<label> Número de jugadores <span>*</span></label>
 			<br />
-			<input type="text" class="form-control" id="numJugadores" name="numJugadores" value="<?php echo $maxJugadores?>">
+			<?php
+			if($maxJugadores==null){
+				echo '<input type="text" class="form-control" id="numJugadores" name="numJugadores" value="'.$maxJugadores.'" disabled/>';
+			}else{
+				echo '<input type="text" class="form-control" id="numJugadores" name="numJugadores" value="'.$maxJugadores.'"/>';
+			}
+			?>
+
 		</div>
 		<div class="form-group" id="Equipos">
 			<label> Número de jugadores por Equipo <span>*</span></label>
 			<br />
-			<input type="text" class="form-control" id="numJugadoresEquipo" name="numJugadoresEquipo" value="<?php echo $maxJugadoresEquipos?>">
+			<?php
+			if($maxJugadoresEquipos==null){
+				echo '<input type="text" class="form-control" id="numJugadoresEquipo" name="numJugadoresEquipo" value="'.$maxJugadoresEquipos.'" disabled/>';
+			}else{
+				echo '<input type="text" class="form-control" id="numJugadoresEquipo" name="numJugadoresEquipo" value="'.$maxJugadoresEquipos.'"/>';
+			}
+			?>
 		</div>
 		<div class="form-group">
 			<label> Número de Rondas <span>*</span></label>
@@ -122,7 +135,8 @@
 		</div>
 		<p><?php if(isset($mensaje)) echo $mensaje; ?></p>
 		<?=validation_errors();?>
-		<input type="submit" value="Editar" class="btn btn-outline-primary"/>
+		<input type="submit" value="Editar" id="Enviar" class="btn btn-outline-primary"/>
+		<p id="fechas"></p>
 	</form>
 </div>
 <?php $this->load->view("templates/footer")?>
@@ -156,6 +170,30 @@
 		}else{
 			document.getElementById('numJugadoresEquipos').show();
 			document.getElementById('numJugadores').hide();
+		}
+	}
+
+	function validarFormatoFechaInicio() {
+		var campo = document.getElementsByName('fechaInicio')[0].value;
+		var exp = /^(0?[1-9]|[12][0-9]|[3][01])\/(0?[1-9]|[1][012])\/([0-9]{4})$/;
+		if (exp.test(campo)) {
+			document.getElementById('Enviar').disabled=false;
+			document.getElementById('fechas').innerText="";
+		} else {
+			document.getElementById('Enviar').disabled=true;
+			document.getElementById('fechas').innerText="Compruebe el formato de la fecha";
+		}
+	}
+
+	function validarFormatoFechaFin() {
+		var campo = document.getElementsByName('fechaFin')[0].value;
+		var exp = /^(0?[1-9]|[12][0-9]|[3][01])\/(0?[1-9]|[1][012])\/([0-9]{4})$/;
+		if (exp.test(campo)) {
+			document.getElementById('Enviar').disabled=false;
+			document.getElementById('fechas').value="Compruebe el formato de las fechas";
+		} else {
+			document.getElementById('Enviar').disabled=true;
+			document.getElementById('fechas').value="";
 		}
 	}
 </script>

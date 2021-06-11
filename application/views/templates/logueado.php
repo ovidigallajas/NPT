@@ -23,7 +23,7 @@
 		<div class="collapse navbar-collapse" id="navbarResponsive">
 			<ul class="navbar-nav ml-auto">
 				<li class="nav-item active">
-					<a class="nav-link" href="<?= base_url() ?>index.php/usuarios/logueado">Home</a>
+					<a class="nav-link" href="#">Inicio</a>
 				</li>
 				<li class="nav-item">
 					<a class="nav-link" href="<?= base_url() ?>index.php/videojuegos/verVideojuegos">Juegos</a>
@@ -46,7 +46,7 @@
 						<li><a class="dropdown-item" href="<?= base_url() ?>index.php/torneos/verTorneosEquipos">En Equipo</a></li>
 					</ul>
 				</li>
-				<?php if($organizador==true){
+				<?php if($perfil=='j'){
 					echo '<li class="nav-item">';
 					echo "<a class='nav-link' href='".base_url()."index.php/torneos/OrganizarTorneos'>Organizador</a>";
 					echo '</li>';
@@ -101,7 +101,11 @@
 	</div>
 </div>
 <div class="titulo">
-	<h1>Bienvenido/a <?php echo $nick?></h1>
+	<?php
+	if($this->session->userdata('logueado')){
+		echo '<h1>Bienvenido/a'.$nick.'</h1>';
+	}
+	?>
 </div>
 <div class="container">
 	<div id="myCarousel" class="carousel slide" data-ride="carousel">

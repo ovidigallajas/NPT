@@ -19,10 +19,6 @@
 			font-family:Courier New !important;
 			text-align: center;
 		}
-		p{
-			color: red ;
-			width:500px ;
-		}
 	</style>
 </head>
 <body>
@@ -33,14 +29,30 @@
 		</div>
 	</div>
 </div>
-<h1>INSTALAR BASE DE DATOS</h1><br>
+<h1>INSTALACIÓN</h1><br>
 <div id="centrar">
 	<form action="<?php echo base_url() ?>index.php/Instalacion/instalar" method="post" enctype="multipart/form-data">
-		<label for="instalar">Para continuar tiene que instalar la base de datos</label><br/><br/>
-		<input type="submit" value="Instalar">
+		<div class="form-group">
+			<label> Usuario <span class="error">*</span></label>
+			<br />
+			<input type="text" class="form-control" name="nick" />
+		</div>
+		<div class="form-group">
+			<label> Contraseña <span class="error">*</span></label>
+			<br />
+			<input type="password" class="form-control" name="password" />
+		</div>
+		<div class="form-group">
+			<label>Repetir Contraseña <span class="error">*</span></label>
+			<br />
+			<input type="password" class="form-control" name="password2" />
+		</div>
+		<div class="error">
+			<p><?php if(isset($mensaje)) echo $mensaje; ?></p>
+			<?=validation_errors();?><br>
+			<input type="submit" value="Instalar">
+		</div>
 	</form><br>
-	<p><?php if(isset($mensaje)) echo $mensaje; ?></p>
-	<?=validation_errors();?><br>
 </div>
 <br>
 </body>
